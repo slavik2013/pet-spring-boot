@@ -1,0 +1,46 @@
+<!--<nav class="navbar navbar-default yellow_background">
+    <form class="form-inline" role="form">
+        <input type="email" class="form-control" id="inputEmail" placeholder="Keyword">
+        <input type="password" class="form-control" id="inputPassword" placeholder="Location">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</nav>-->
+<div class="yellow_background margin_bottom yellow_border padding_all">
+    <form class="form-inline" role="form">
+        <input type="email" class="form-control" id="inputEmail" placeholder="Keyword">
+        <input type="password" class="form-control" id="inputPassword" placeholder="Location">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-md-7 col-sm-7">
+        <div class="row">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3" ng-repeat="category in categories">
+                <a href="#/petlist" class="thumbnail"><img ng-src={{"images/"+category.icon}} />
+                    <div class="caption">
+                        <strong>{{category.name}}</strong>
+                    </div>
+                </a></div>
+        </div>
+    </div>
+    <div class="col-md-5 col-sm-5">
+        <div class="leftbar">
+            <h3>Fast, Easy and Free</h3>
+            <div class="add_advert">
+                <a href="#/addadvert">
+                    <div class="btn btn-lg btn-success" role="button">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add advert
+
+                    </div>
+                </a>
+            </div>
+            <div class="pluses">
+                <h5><span class="glyphicon glyphicon-ok green" aria-hidden="true"></span> Free and without registration</h5>
+                <h5><span class="glyphicon glyphicon-ok green" aria-hidden="true"></span> Up to 8 photos in advert</h5>
+                <h5><span class="glyphicon glyphicon-ok green" aria-hidden="true"></span> Is active up to 30 days</h5>
+            </div>
+        </div>
+
+    </div>
+</div>

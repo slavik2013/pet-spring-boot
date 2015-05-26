@@ -1,0 +1,190 @@
+<div class="grey_border" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+    <div class="row nopadding nomargin">
+        <div class="col-sm-1 nopadding nomargin"></div>
+        <div class="col-sm-11 nopadding nomargin"><h4 class="nopadding nomargin"><strong>Add free advert on PetyBay {{hashPath}}</strong></h4></div>
+    </div>
+
+    <hr/>
+<form class="form-horizontal" ng-submit="submit()">
+    <div class="form-group">
+        <label class="control-label col-xs-3" for="inputTitle">Title</label>
+        <div class="col-xs-8">
+            <input type="text" class="form-control" id="inputTitle" placeholder="Title" ng-model="pet.title">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-3">Category</label>
+        <div class="col-xs-8">
+            <select class="form-control" ng-model="pet.category.name" ng-change="getBreeds()" >
+                <option ng-repeat="category in categories">{{category.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="form-group" ng-show="pet.category.name">
+        <label class="control-label col-xs-3">Price</label>
+        <div class="col-xs-8">
+            <div class="radio">
+                <label><input type="radio" name="pricecheck" ng-model="pet.price.free">Free</label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="pricecheck" ng-model="pet.price.change">Change</label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="pricecheck" ng-checked="1">Price</label>
+                <input type="text" ng-model="pet.price.price">
+                <select ng-init="pet.price.currency = options[0]" ng-model="pet.price.currency">
+                    <option>грн</option>
+                    <option>$</option>
+                    <option>€</option>
+                </select>
+
+                <label><input type="checkbox" value="true" ng-model="pet.price.contractPrice"> Contract price</label>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group"  ng-show="pet.category.name">
+        <label class="control-label col-xs-3">Breed</label>
+        <div class="col-xs-8">
+            <select class="form-control" ng-model="pet.breed.name">
+                <option ng-repeat="breed in breeds">{{breed.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-11 col-md-3" for="inputDescription">Description</label>
+
+        <div class="col-xs-12 col-md-8">
+            <textarea rows="5" class="form-control" id="inputDescription" placeholder="Description" ng-model="pet.description"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-3">Upload Image {{uploader.isHTML5}}</label>
+        <!--<div class="col-xs-8">Queue length: {{ uploader.queue.length }}</div>-->
+        <div class="col-xs-8"><input type="file" nv-file-select="" uploader="uploader" multiple name="file"/><br/></div>
+
+        <div ng-repeat="item in uploader.queue">
+            <div class="form-group">
+                <label class="control-label col-xs-3">{{item.file.name}}</label>
+
+                <div class="col-xs-2" ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
+                <div ng-show="uploader.isHTML5" class="col-xs-1">{{ item.file.size/1024/1024|number:2 }} MB</div>
+
+
+
+                <div class="col-xs-2">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                    </div>
+                <button type="button" class="btn btn-danger btn-xs" ng-click="deleteImage(item)">
+                    <span class="glyphicon glyphicon-trash"></span> Remove
+                </button>
+
+                    <!--<button type="button" class="btn btn-success btn-xs" ng-click="item.upload()"-->
+                            <!--ng-disabled="item.isReady || item.isUploading || item.isSuccess">-->
+                        <!--<span class="glyphicon glyphicon-upload"></span> Upload-->
+                    <!--</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="form-group">
+        <label class="control-label col-xs-3">Region</label>
+        <div class="col-xs-8">
+            <select class="form-control" ng-model="pet.location.region">
+                <option>Kyiv</option>
+                <option>Lviv</option>
+                <option>Volyn</option>
+                <option>Vinnica</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-3">City</label>
+        <div class="col-xs-8">
+            <select class="form-control" ng-model="pet.location.city">
+                <option>Irpin</option>
+                <option>Brovary</option>
+                <option>Gostomel</option>
+            </select>
+        </div>
+    </div>
+
+    <hr/>
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-3" for="inputContactFace">Contact face</label>
+        <div class="col-xs-8">
+            <input type="text" class="form-control" id="inputContactFace" placeholder="Contact face"
+                   ng-model="pet.owner.name">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-3" for="inputEmail">Email address</label>
+        <div class="col-xs-8">
+            <input type="email" class="form-control" id="inputEmail" placeholder="Email" ng-model="pet.owner.email">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-offset-3 col-xs-9">
+            <label class="checkbox-inline">
+                <input type="checkbox" value="noansweremail"> Do not send answer on email
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-3" for="phoneNumber">Phone number</label>
+        <div class="col-xs-8">
+            <input type="tel" class="form-control" id="phoneNumber" placeholder="Phone Number" ng-model="pet.owner.phone">
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-3" for="inputSkype">Skype</label>
+        <div class="col-xs-8">
+            <input type="text" class="form-control" id="inputSkype" placeholder="Skype" ng-model="pet.owner.skype">
+        </div>
+    </div>
+
+
+
+    <div class="row nopadding nomargin">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-11"><h4 class="nopadding nomargin"><strong>Data processing agreement</strong></h4></div>
+    </div>
+
+    <hr/>
+
+    <div class="form-group">
+        <div class="col-xs-offset-3 col-xs-8">
+            <label class="checkbox-inline">
+                <input type="checkbox" value="agree">  I agree to the <a href="#">Terms and Conditions</a>.
+            </label>
+        </div>
+    </div>
+
+    <br>
+    <div class="form-group">
+        <div class="col-xs-offset-3 col-xs-8">
+            <input type="submit" class="btn btn-primary btn-lg" value="Submit">
+        </div>
+    </div>
+</form>
+</div>

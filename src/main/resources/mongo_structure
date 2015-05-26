@@ -1,0 +1,20 @@
+Elements:
+1.Pet
+2.Category
+3.Breed
+4.Owner
+5.Location
+6.Price
+
+
+Price {
+    "price":100,
+    "free":"null",
+    "currency":"$",
+    "contractprice":"true",
+    "change":"null"
+}
+
+Location {
+
+}

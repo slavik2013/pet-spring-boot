@@ -1,0 +1,455 @@
+/* Space out content a bit */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+/* Custom page header */
+.header {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e5e5e5;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+}
+
+/* Custom page footer */
+.footer {
+    margin-top: 15px;
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Customize container */
+@media (min-width: 768px) {
+    .container {
+
+    }
+}
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+}
+.jumbotron .btn {
+    padding: 14px 24px;
+    font-size: 21px;
+}
+
+/* Supporting marketing content */
+.marketing {
+    margin: 40px 0;
+}
+.marketing p + h4 {
+    margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen  {
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-right: 0;
+        padding-left: 0;
+    }
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 10px;
+    }
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
+
+.leftbar{
+    padding: 20px;
+    text-align: left;
+    background: url("../images/background.png") repeat scroll 0px 0px transparent;
+}
+
+.pluses{
+    text-align: left;
+}
+
+.green{
+    color: darkgreen;
+}
+
+.add_advert{
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.noborder{
+    border: none;
+}
+
+.color_yellow{
+    color: #ED9614;
+}
+
+.blue_color{
+    color: #2965BE;
+}
+
+.yellow_background{
+    background: none repeat scroll 0% 0% #FFD25E;
+}
+
+.color_red{
+    color: lightsalmon;
+}
+
+.color_black{
+    color: #414141;
+}
+
+.margin_bottom{
+    margin-bottom: 20px;
+}
+
+.yellow_border{
+    border: 1px solid #e59d5a;
+    border-radius: 4px;
+}
+
+.grey_border{
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+}
+.padding_all{
+    padding: 10px;
+}
+
+.nopadding{
+    padding: 0px;
+}
+
+.nomargin{
+    margin: 0px;
+}
+
+.margin_bottom_10{
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.price_text{
+    color: #414141;
+    font-size: 22px;
+    line-height: 34px;
+    margin-top: 7px !important;
+    display: block;
+    font-family: "Verdana",Arial,Helvetica,sans-serif;
+    font-kerning: auto;
+    font-size-adjust: none;
+    font-synthesis: weight style;
+    font-weight: 700;
+}
+.price{
+    text-align: center;
+    border-radius: 5px 5px 5px 5px;
+    background: none repeat scroll 0% 0% #FFEE7E;
+    text-shadow: 0px 1px 0px #FFF;
+    padding: 13px 5px 20px 5px;
+
+}
+
+/*.price::before {*/
+    /*width: 28px;*/
+    /*height: 74px;*/
+    /*background: url("http://s1ext.staticclassifieds.com/static/olxua/packed/img/2fad3ec4b914967363d1f1dbda34804482.png") no-repeat scroll -268px -67px transparent;*/
+    /*top: 0px;*/
+    /*left: -12px;*/
+    /*position: absolute;*/
+    /*content: " ";*/
+/*}*/
+
+.text_center{
+    text-align: center;
+}
+
+.color_black_52{
+    color: #525252;
+}
+
+.font_size_16{
+    font-size: 16px;
+}
+
+.border{
+    border: 1px solid #EDEDED;
+    border-radius: 5px;
+}
+
+.font_size_18{
+    font-size: 18px;
+}
+
+.font_weight_normal{
+    font-weight: normal !important;
+}
+
+.write_to_author{
+    margin-bottom: 15px;
+}
+
+/*.padding_right_left_10{*/
+    /*padding-left: 10px;*/
+    /*padding-right: 10px;*/
+/*}*/
+.ad_author_info_block{
+    padding: 11px 16px;
+    background: none repeat scroll 0% 0% #F1F5FC;
+}
+
+
+.ad_map_block{
+    margin-top: 10px;
+    padding: 11px 16px;
+    background: none repeat scroll 0% 0% #F1F5FC;
+}
+
+.margin_right_10{
+    margin-right: 10px;
+}
+
+.margin_left_10{
+    margin-left:10px;
+}
+
+
+.skype {
+    width: 28px;
+    height: 28px;
+    background-position: -28px -268px;
+    /*background-image: url("http://s1ext.staticclassifieds.com/static/olxua/packed/img/2fad3ec4b914967363d1f1dbda34804482.png");*/
+
+    background-image:url("../images/glyphicons.png");
+}
+
+.vertical_align_middle{
+    vertical-align: middle;
+}
+
+.display_inline_block{
+    display: inline-block;
+}
+
+.phone{
+    width: 28px;
+    height: 28px;
+    background-position: 0px -268px;
+    background-image:url("../images/glyphicons.png");
+}
+
+.border_radius_3{
+    border-radius: 3px;
+}
+
+.map{
+    width: 23px;
+    height: 38px;
+    background-position: -207px -143px;
+    background-image:url("../images/glyphicons.png");
+}
+
+.font_size_12{
+    font-size: 12px;
+    line-height: 16px;
+    color: #414141;
+}
+
+.block{
+    display: block;
+}
+
+.user{
+    width: 28px;
+    height: 28px;
+    background-position: -56px -268px;
+    background-image:url("../images/glyphicons.png");
+}
+
+.ad_author_data{
+    margin-top: 10px;
+    padding: 11px 16px;
+    background: none repeat scroll 0% 0% #f7fbff;
+}
+
+.ad_activities_list{
+    margin-top: 10px;
+    padding: 11px 16px;
+    background: none repeat scroll 0% 0% #f7fbff;
+}
+
+.flag{
+    width: 28px;
+    height: 28px;
+    background-position: -84px -268px;
+    background-image:url("../images/glyphicons.png");
+}
+
+.ad_head_block{
+    text-align: left;
+    color: #414141;
+}
+
+.padding_top_bottom_15{
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+.advert_head_title{
+    font-size: 21px;
+    font-family: "Verdana",Arial,Helvetica,sans-serif;
+    word-wrap: break-word;
+    font-weight: bold;
+    color: #2B2B2B;
+    padding: 0px;
+    margin: 0px;
+    text-align: left;
+}
+
+.map_small{
+    width: 12px;
+    height: 20px;
+    background-position: -97px -208px;
+    /*background-image: url("http://s1ext.staticclassifieds.com/static/olxua/packed/img/2fad3ec4b914967363d1f1dbda34804482.png");*/
+    background-image:url("../images/glyphicons.png");
+
+}
+
+.map_small_text{
+    color: #414141;
+    font-family: "Verdana",Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+
+}
+
+.margine_top_10{
+    margin-top: 10px;
+}
+
+.margin_left_6{
+    margin-left: 6px;
+}
+
+.grey_border_right{
+    border-right: 1px solid #e5e5e5;
+}
+
+
+.padding_right_10{
+    padding-right: 10px;
+}
+
+.head_title_added_small_text{
+    color: #626262;
+    font-family: "Verdana",Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.ad_manipulation_buttons{
+
+}
+
+.grey_background_f3{
+    background-color: #f3f3f3;
+    border-color: #E5E5E5
+    height: 26px;
+    line-height: 26px !important;
+}
+
+.manipulation_buttons_icon_top {
+    width: 21px;
+    height: 31px;
+    background: url("../images/glyphicons.png") -347px -198px;
+}
+
+.manipulation_buttons_icon_make_urgently {
+    width: 38px;
+    height: 24px;
+    background: url("../images/glyphicons.png") -378px -229px;
+}
+
+.manipulation_buttons_icon_select {
+    width: 22px;
+    height: 31px;
+    background: url("../images/glyphicons.png") -394px -198px;
+}
+
+.manipulation_buttons_icon_select {
+    width: 22px;
+    height: 31px;
+    background: url("../images/glyphicons.png") -394px -198px;
+}
+
+.manipulation_buttons_icon_raise {
+    width: 26px;
+    height: 32px;
+    background: url("../images/glyphicons.png") -368px -198px;
+}
+
+.nopadding_top_bottom{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.nomargin_top_bottom{
+    margin-top: 0px;
+    margine-bottom: 0px;
+}
+
+.margine_top_15{
+    margin-top: 15px;
+}
+
+.nopadding_left_right{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.nomargin_left_right{
+    margin-left: 0px;
+    margine-right: 0px;
+}
+
+.margin_left_20{
+    margin-left: 20px;
+}
+
+.thumbnail{
+    background: url("../images/image_background.png") repeat scroll 0% 0% transparent;
+    border: none;
+    border-radius: 0px;
+}
+
+.margin_bottom_20{
+    margin-bottom: 20px;
+}
+
+.padding_bottom_20{
+    padding-bottom: 20px;
+}
