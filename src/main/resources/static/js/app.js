@@ -28,6 +28,14 @@ app.config(['$routeProvider',
                 templateUrl: 'partials/pet.html',
                 controller: 'petController'
             }).
+            when('/login', {
+                templateUrl: 'partials/login.html',
+                controller: 'loginController'
+            }).
+            when('/registration', {
+                templateUrl: 'partials/registration.html',
+                controller: 'registrationController'
+            }).
             otherwise({
                 redirectTo: '/index'
             });

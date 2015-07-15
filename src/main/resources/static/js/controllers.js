@@ -277,3 +277,12 @@ controllers.controller('petController', function ($scope, $routeParams, $http){
     //alert("petId = " + $routeParams.petId);
     getPetById($scope, $http, $routeParams.petId);
 })
+
+
+controllers.controller('loginController', function ($scope, $routeParams, $http){
+    $scope.date = new Date();
+})
+
+controllers.controller('registrationController', function ($scope, $routeParams, $http){
+    $scope.date = new Date();
+})

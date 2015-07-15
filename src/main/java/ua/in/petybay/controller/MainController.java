@@ -17,7 +17,6 @@ import ua.in.petybay.service.image.picasa.PicasaImageSaver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -59,7 +58,6 @@ public class MainController {
     @RequestMapping(value = "/pet/{petId}", method = RequestMethod.GET, produces = "application/json")
     public Pet getPet(@PathVariable("petId") String petId){
         System.out.println("getPet() petId = " + petId);
-
         if(petId != null && !"".equals(petId)){
            return petRepository.findOne(petId);
         }
@@ -68,11 +66,9 @@ public class MainController {
 
     @RequestMapping(value = "/pet", method = RequestMethod.GET, produces = "application/json")
     public List<Pet> getPets(){
-        BigDecimal dd;
         System.out.println("getPets()");
         return  petRepository.findAll();
     }
-
 
 
     @RequestMapping(value = "/category", method = RequestMethod.GET, produces = "application/json")
@@ -124,7 +120,6 @@ public class MainController {
                 e.printStackTrace();
             }
         }
-
     }
 
     @RequestMapping(value = "/saveimage")
