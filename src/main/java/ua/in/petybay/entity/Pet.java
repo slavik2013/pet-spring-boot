@@ -37,14 +37,15 @@ public class Pet {
     private int viewCount;
     private String active;
 
+    private User user;
+
     private List<ImageEntity> imageEntity;
 
     public Pet() {
     }
 
-    public Pet(Category category, String color, Date birthday, String gender, String documents, String parentsTitle,
-               Location location, Price price, Breed breed, Owner owner, List<String> photos, Date publicationDate, String description,
-               String title, int viewCount, String active, List<ImageEntity> imageEntity) {
+    public Pet(String id, Category category, String color, Date birthday, String gender, String documents, String parentsTitle, Location location, Price price, Breed breed, Owner owner, Date publicationDate, String description, String title, int viewCount, String active, User user, List<ImageEntity> imageEntity) {
+        this.id = id;
         this.category = category;
         this.color = color;
         this.birthday = birthday;
@@ -60,6 +61,7 @@ public class Pet {
         this.title = title;
         this.viewCount = viewCount;
         this.active = active;
+        this.user = user;
         this.imageEntity = imageEntity;
     }
 
@@ -195,6 +197,14 @@ public class Pet {
         this.imageEntity = imageEntity;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Pet{" +
@@ -205,7 +215,7 @@ public class Pet {
                 ", gender='" + gender + '\'' +
                 ", documents='" + documents + '\'' +
                 ", parentsTitle='" + parentsTitle + '\'' +
-                ", location='" + location + '\'' +
+                ", location=" + location +
                 ", price=" + price +
                 ", breed=" + breed +
                 ", owner=" + owner +
@@ -213,7 +223,8 @@ public class Pet {
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
                 ", viewCount=" + viewCount +
-                ", active=" + active +
+                ", active='" + active + '\'' +
+                ", user=" + user +
                 ", imageEntity=" + imageEntity +
                 '}';
     }

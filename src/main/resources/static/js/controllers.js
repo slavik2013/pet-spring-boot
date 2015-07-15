@@ -1,8 +1,40 @@
 /**
  * Created by slavik on 04.04.15.
  */
-var controllers = angular.module('controllers', ['angularFileUpload']);
+var controllers = angular.module('controllers', ['angularFileUpload','ngCookies']);
 
+//controllers.service('sharedProperties', function () {
+//    var property = 'First';
+//
+//    return {
+//        getProperty: function () {
+//            return property;
+//        },
+//        setProperty: function(value) {
+//            property = value;
+//        }
+//    };
+//});
+
+controllers.factory('myService', function () {
+    var formData = {};
+
+    return {
+        getData: function () {
+            //You could also return specific attribute of the form data instead
+            //of the entire data
+            return formData;
+        },
+        setData: function (newFormData) {
+            //You could also set specific attribute of the form data instead
+            formData = newFormData
+        },
+        resetData: function () {
+            //To be called when the data stored needs to be discarded
+            formData = {};
+        }
+    };
+});
 
 controllers.directive('ngThumb', function($window) {
     var helper = {
@@ -70,6 +102,22 @@ function getCategories($scope, $http){
     });
 }
 
+function getUser($scope, $http){
+    var req = {
+        method: 'GET',
+        url: 'user',
+        headers: {
+            'Content-Type': undefined
+        }
+    }
+
+    $http(req).success(function(data){
+        $scope.authenticatedUser = data;
+    }).error(function(){
+        //alert('error');
+    });
+}
+
 function getPets($scope, $http){
     var req = {
         method: 'GET',
@@ -86,9 +134,19 @@ function getPets($scope, $http){
     });
 }
 
-controllers.controller('mainController', function ($scope, $http) {
 
+controllers.controller('loginUserController', function ($scope, $http){
+    //alert("get user");
+    getUser($scope, $http);
+});
+
+controllers.controller('mainController', function ($scope, $routeParams, $http, $location /*,$cookieStore, $cacheFactory*/) {
+
+    //if(categoriesCache == null)
     getCategories($scope, $http);
+    //getUser($scope, $http);
+    //$scope.authenticatedUser = $cacheFactory('userCache').get('user');
+    //alert(JSON.stringify($scope.authenticatedUser));
 
 });
 
@@ -199,7 +257,7 @@ controllers.controller('addadvertController', function ($scope, $http, $location
         });
         delete $scope.images[item.file.name];
         item.remove();
-    }
+    };
 
 
     $scope.submit = function() {
@@ -216,7 +274,7 @@ controllers.controller('addadvertController', function ($scope, $http, $location
             headers: {
                 'Content-Type': 'application/json'
             }
-        }
+        };
 
         $http(req).success(function(data){
 
@@ -225,7 +283,7 @@ controllers.controller('addadvertController', function ($scope, $http, $location
         });
 
         $location.path("/adsuccess");
-    }
+    };
 
     $scope.breeds = [];
 
@@ -240,7 +298,7 @@ controllers.controller('addadvertController', function ($scope, $http, $location
                 headers: {
                     'Content-Type': undefined
                 }
-            }
+            };
             $http(req).success(function (data) {
 /*                var  categoryBreed = {};
                 categoryBreed[$scope.pet.category.name] = data;
@@ -254,7 +312,7 @@ controllers.controller('addadvertController', function ($scope, $http, $location
 
 controllers.controller('dateController', function ($scope){
     $scope.date = new Date();
-})
+});
 
 
 function getPetById($scope, $http, petId){
@@ -276,13 +334,62 @@ function getPetById($scope, $http, petId){
 controllers.controller('petController', function ($scope, $routeParams, $http){
     //alert("petId = " + $routeParams.petId);
     getPetById($scope, $http, $routeParams.petId);
-})
+});
 
 
-controllers.controller('loginController', function ($scope, $routeParams, $http){
-    $scope.date = new Date();
-})
+controllers.controller('loginController', function ($scope, $routeParams, $http, $location, $window/*, $cookieStore, $cacheFactory*/){
 
-controllers.controller('registrationController', function ($scope, $routeParams, $http){
-    $scope.date = new Date();
-})
+    $scope.user = {};
+    //$scope.authenticatedUserCache = $cacheFactory('userCache');
+
+    //alert($scope.authenticatedUserCache.get('user'));
+
+    $scope.submit = function() {
+
+        var req = {
+            method: 'POST',
+            url: '/login',
+            data: $.param($scope.user),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        };
+
+        $http(req).success(function(data){
+            //$cookieStore.put('user', JSON.stringify(data));
+            //$scope.authenticatedUserCache.put("user", JSON.stringify(data));
+            //$location.path("/index");
+            $window.location.href = '/';
+        }).error(function(data){
+
+        });
+
+}
+});
+
+controllers.controller('registrationController', function ($scope, $routeParams, $http, $location){
+    $scope.user = {};
+
+    $scope.submit = function() {
+
+        //alert(JSON.stringify($scope.user));
+
+        var req = {
+            method: 'POST',
+            url: '/register',
+            data: $scope.user,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        $http(req).success(function(data){
+
+        }).error(function(){
+
+        });
+
+        //$location.path("/adsuccess");
+    }
+
+});

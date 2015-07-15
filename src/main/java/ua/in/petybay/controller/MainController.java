@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.in.petybay.dao.BreedRepository;
 import ua.in.petybay.dao.CategoryRepository;
-import ua.in.petybay.dao.OwnerRepository;
 import ua.in.petybay.dao.PetRepository;
 import ua.in.petybay.entity.Breed;
 import ua.in.petybay.entity.Category;
@@ -29,8 +28,8 @@ public class MainController {
 
     @Autowired
     private PetRepository petRepository;
-    @Autowired
-    private OwnerRepository ownerRepository;
+//    @Autowired
+//    private OwnerRepository ownerRepository;
     @Autowired
     private BreedRepository breedRepository;
     @Autowired

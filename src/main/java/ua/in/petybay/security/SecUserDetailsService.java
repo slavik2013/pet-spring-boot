@@ -19,8 +19,9 @@ public class SecUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("SecUserDetailsService.class loadUserByUsername() email = " + email);
         User user = userRepository.findByEmail(email);
-        System.out.println("user = " + user);
+        System.out.println("SecUserDetailsService.class loadUserByUsername() user = " + user);
         if(user == null){
             throw new UsernameNotFoundException(email);
         }else{

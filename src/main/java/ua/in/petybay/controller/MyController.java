@@ -7,12 +7,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import ua.in.petybay.dao.UserRepository;
 import ua.in.petybay.dao.VerificationTokenRepository;
@@ -23,7 +20,6 @@ import ua.in.petybay.security.PasswordEncoderService;
 import ua.in.petybay.security.SecUserDetails;
 import ua.in.petybay.service.IUserService;
 
-import javax.annotation.security.PermitAll;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -41,14 +37,18 @@ public class MyController {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
+//    @InitBinder
+//    public void initBinder(WebDataBinder binder){
+//        binder.setDisallowedFields("passwordconfirm");
+//    }
 
     @Secured({"ROLE_USER"})
     @RequestMapping(value = "/user")
-    public String getUserInfo(@AuthenticationPrincipal SecUserDetails secUserDetails){
+    public User getUserInfo(@AuthenticationPrincipal SecUserDetails secUserDetails){
 //        SecUserDetails user = (SecUserDetails)(((Authentication) principal).getPrincipal());
         User user = secUserDetails.getUser();
         System.out.println("my rest user = " + user);
-        return "ok, getUserInfo: \"ROLE_USER\"  : " + user;
+        return  user;
     }
 
 
@@ -59,11 +59,15 @@ public class MyController {
     }
 
 
-    @PermitAll
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    @Transactional
-    public String register(User user, @Qualifier("passwordEncoderService") PasswordEncoderService passwordEncoderService,
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "text/plain")
+    public String register(@RequestBody User user, @Qualifier("passwordEncoderService") PasswordEncoderService passwordEncoderService,
                            WebRequest request, Errors errors){
+        for(ObjectError objectError : errors.getAllErrors()){
+            System.out.println("objectError = " + objectError);
+        }
+
+        System.out.println("register() user = " + user);
 
         if (!service.emailExist(user.getEmail())) {
 
@@ -76,7 +80,7 @@ public class MyController {
             authorities.add("ROLE_USER");
             user.setAuthority(authorities);
 
-            user.setEnabled(false);
+//            user.setEnabled(false);
 
             System.out.println("user = " + user);
 
@@ -110,10 +114,10 @@ public class MyController {
 
         User user = verificationToken.getUser();
         Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            System.out.println("account expired");
-            return "account expired";
-        }
+//        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+//            System.out.println("account expired");
+//            return "account expired";
+//        }
 
         user.setEnabled(true);
         service.saveRegisteredUser(user);

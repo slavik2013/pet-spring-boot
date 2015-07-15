@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.in.petybay.dao.BreedRepository;
 import ua.in.petybay.dao.CategoryRepository;
-import ua.in.petybay.dao.OwnerRepository;
 import ua.in.petybay.dao.PetRepository;
 import ua.in.petybay.entity.Breed;
 import ua.in.petybay.entity.Category;
@@ -22,8 +21,8 @@ public class PetService {
     @Autowired
     BreedRepository breedRepository;
 
-    @Autowired
-    OwnerRepository ownerRepository;
+//    @Autowired
+//    OwnerRepository ownerRepository;
 
     @Autowired
     PetRepository petRepository;

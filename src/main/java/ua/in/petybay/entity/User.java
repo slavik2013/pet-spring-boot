@@ -1,9 +1,11 @@
 package ua.in.petybay.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,7 +14,7 @@ import java.util.List;
 @Document(collection="user")
 public class User {
 
-    @Id
+    @Id @JsonIgnore
     private String id;
     private String email;
 
@@ -20,8 +22,11 @@ public class User {
     private String name;
     private String phone;
     private String skype;
+    @JsonIgnore
     private String password;
+    @JsonIgnore
     private List<String> authority;
+    private Date dateCreate;
 
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
@@ -32,9 +37,7 @@ public class User {
     public User() {
     }
 
-    public User(String id, String email, String name, String phone, String skype, String password,
-                List<String> authority, boolean accountNonExpired, boolean accountNonLocked,
-                boolean credentialsNonExpired, boolean enabled) {
+    public User(String id, String email, String name, String phone, String skype, String password, List<String> authority, Date dateCreate, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -42,6 +45,7 @@ public class User {
         this.skype = skype;
         this.password = password;
         this.authority = authority;
+        this.dateCreate = dateCreate;
         this.accountNonExpired = accountNonExpired;
         this.accountNonLocked = accountNonLocked;
         this.credentialsNonExpired = credentialsNonExpired;
@@ -136,6 +140,14 @@ public class User {
         this.enabled = enabled;
     }
 
+    public Date getDateCreate() {
+        return dateCreate;
+    }
+
+    public void setDateCreate(Date dateCreate) {
+        this.dateCreate = dateCreate;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -146,6 +158,7 @@ public class User {
                 ", skype='" + skype + '\'' +
                 ", password='" + password + '\'' +
                 ", authority=" + authority +
+                ", dateCreate=" + dateCreate +
                 ", accountNonExpired=" + accountNonExpired +
                 ", accountNonLocked=" + accountNonLocked +
                 ", credentialsNonExpired=" + credentialsNonExpired +

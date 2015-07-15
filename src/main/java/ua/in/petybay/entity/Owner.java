@@ -7,12 +7,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 /**
- * Created by slavik on 31.03.15.
- */
+* Created by slavik on 31.03.15.
+*/
 @Document(collection="owner")
 public class Owner {
 
-    @Id @JsonIgnore
+    @Id
+    @JsonIgnore
     String id;
     String email;
     String name;
