@@ -1,11 +1,15 @@
 package ua.in.petybay.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
+import ua.in.petybay.Events.OnAddAdvertCompleteEvent;
 import ua.in.petybay.dao.BreedRepository;
 import ua.in.petybay.dao.CategoryRepository;
 import ua.in.petybay.dao.PetRepository;
@@ -42,13 +46,40 @@ public class MainController {
     @Autowired
     private PicasaImageSaver picasaImageSaver;
 
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
+
 
     @RequestMapping(value = "/pet", method = RequestMethod.POST, produces = "text/plain")
 //    @Secured({"ROLE_ADMIN"})
-    public String savePet(@RequestBody Pet pet){
+    public String savePet(@RequestBody Pet pet, WebRequest request,
+                          Authentication authentication, HttpServletRequest httpServletRequest){
         System.out.println("pet : " + pet);
+
+        boolean isUserAuthenticated = (authentication != null && authentication.isAuthenticated());
+
+        if (isUserAuthenticated){
+            pet.setState(Pet.STATE.ACTIVE);
+        }
+
         pet.calculateAndSetPublicationDate();
+
+        String ipAddress = httpServletRequest.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null) {
+            ipAddress = httpServletRequest.getRemoteAddr();
+        }
+        System.out.println("ipAddress is " + ipAddress);
+
+        pet.setIpAddress(ipAddress);
         petService.save(pet);
+
+        System.out.println("savePet() authentication = " + authentication);
+
+        if (!isUserAuthenticated) {
+            System.out.println("savePet() send email to confirm");
+            String appUrl = request.getContextPath();
+            eventPublisher.publishEvent(new OnAddAdvertCompleteEvent(pet, appUrl));
+        }
 
         return "all is ok";
     }
@@ -82,6 +113,7 @@ public class MainController {
         List<Pet> pets = null;
         if(category != null && !"".equals(category)){
             pets = petRepository.findByCategoryName(category);
+            pets = petRepository.findByCategoryNameAndState(category, Pet.STATE.ACTIVE);
         }
         return pets;
     }

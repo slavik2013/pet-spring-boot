@@ -14,14 +14,19 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import ua.in.petybay.dao.AdvertVerificationTokenRepository;
+import ua.in.petybay.dao.PetRepository;
 import ua.in.petybay.dao.UserRepository;
 import ua.in.petybay.dao.VerificationTokenRepository;
+import ua.in.petybay.entity.AdvertVerificationToken;
+import ua.in.petybay.entity.Pet;
 import ua.in.petybay.entity.User;
 import ua.in.petybay.entity.VerificationToken;
 import ua.in.petybay.security.OnRegistrationCompleteEvent;
 import ua.in.petybay.security.PasswordEncoderService;
 import ua.in.petybay.security.SecUserDetails;
 import ua.in.petybay.security.SecUserDetailsService;
+import ua.in.petybay.service.IAdvertService;
 import ua.in.petybay.service.IUserService;
 
 import java.util.ArrayList;
@@ -137,7 +142,16 @@ public class MyController {
     private IUserService service;
 
     @Autowired
+    private IAdvertService advertService;
+
+    @Autowired
     private VerificationTokenRepository verificationTokenRepository;
+
+    @Autowired
+    private PetRepository petRepository;
+
+    @Autowired
+    private AdvertVerificationTokenRepository advertVerificationTokenRepository;
 
     @RequestMapping(value = "/regitrationConfirm", method = RequestMethod.GET)
     public String confirmRegistration(@RequestParam("token") String token) {
@@ -164,6 +178,26 @@ public class MyController {
         return "confirmed";
     }
 
+    @RequestMapping(value = "/activateAdvertisement", method = RequestMethod.GET)
+    public String activateAdvertisement(@RequestParam("token") String token) {
+
+        AdvertVerificationToken verificationToken = advertService.getVerificationToken(token);
+
+        if (verificationToken == null) {
+            System.out.println("verificationToken is null");
+            return "verificationToken is null";
+        }
+
+        Pet advert = verificationToken.getPet();
+
+        advert.setState(Pet.STATE.ACTIVE);
+
+        petRepository.save(advert);
+
+        verificationToken.setVerified(true);
+        advertVerificationTokenRepository.save(verificationToken);
+        return "advertisement activated";
+    }
 
     @RequestMapping(value = "/allusers", method = RequestMethod.GET)
     public List<User> getAllUsers() {

@@ -14,6 +14,12 @@ import java.util.List;
 @Document(collection="pet")
 public class Pet {
 
+    public static enum STATE{
+        ACTIVE,
+        WAITING,
+        NONACTIVE
+    }
+
     @Id
     private String id;
 
@@ -43,10 +49,14 @@ public class Pet {
 
     private List<ImageEntity> imageEntity;
 
+    private STATE state = STATE.WAITING;
+
+    private String ipAddress;
+
     public Pet() {
     }
 
-    public Pet(String id, Category category, String color, Date birthday, String gender, String documents, String parentsTitle, Location location, Price price, Breed breed, Owner owner, Date publicationDate, String description, String title, int viewCount, String active, User user, List<ImageEntity> imageEntity) {
+    public Pet(String id, Category category, String color, Date birthday, String gender, String documents, String parentsTitle, Location location, Price price, Breed breed, Owner owner, Date publicationDate, String description, String title, int viewCount, String active, User user, List<ImageEntity> imageEntity, STATE state) {
         this.id = id;
         this.category = category;
         this.color = color;
@@ -65,6 +75,7 @@ public class Pet {
         this.active = active;
         this.user = user;
         this.imageEntity = imageEntity;
+        this.state = state;
     }
 
     public String getId() {
@@ -205,6 +216,22 @@ public class Pet {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public STATE getState() {
+        return state;
+    }
+
+    public void setState(STATE state) {
+        this.state = state;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     @Override

@@ -1,40 +1,41 @@
-package ua.in.petybay.security;
+package ua.in.petybay.EventListeners;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import ua.in.petybay.Events.OnAddAdvertCompleteEvent;
 import ua.in.petybay.configuration.GeneralConfigs;
-import ua.in.petybay.entity.User;
-import ua.in.petybay.service.IUserService;
+import ua.in.petybay.entity.Pet;
+import ua.in.petybay.service.IAdvertService;
 
 import java.util.UUID;
 
 /**
- * Created by slavik on 14.07.15.
+ * Created by slavik on 18.07.15.
  */
 @Component
-public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
+public class AddAdvertListener implements ApplicationListener<OnAddAdvertCompleteEvent> {
     @Autowired
-    private IUserService service;
+    private IAdvertService advertService;
 
     @Autowired
     private JavaMailSender mailSender;
 
     @Override
-    public void onApplicationEvent(OnRegistrationCompleteEvent event) {
+    public void onApplicationEvent(OnAddAdvertCompleteEvent event) {
         this.confirmRegistration(event);
     }
 
-    private void confirmRegistration(OnRegistrationCompleteEvent event) {
-        User user = event.getUser();
+    private void confirmRegistration(OnAddAdvertCompleteEvent event) {
+        Pet advert = event.getAdvert();
         String token = UUID.randomUUID().toString();
-        service.createVerificationToken(user, token);
+        advertService.createVerificationToken(advert, token);
 
-        String recipientAddress = user.getEmail();
-        String subject = "Registration Confirmation";
-        String confirmationUrl = event.getAppUrl() + "/regitrationConfirm?token=" + token;
+        String recipientAddress = advert.getUser().getEmail();
+        String subject = "Activate your advertisement";
+        String confirmationUrl = event.getAppUrl() + "/activateAdvertisement?token=" + token;
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);

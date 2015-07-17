@@ -4,48 +4,31 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by slavik on 14.07.15.
+ * Created by slavik on 18.07.15.
  */
-@Document(collection = "verificationtoken")
-public class VerificationToken {
-    private static final int EXPIRATION = 60 * 24;
-
+@Document(collection = "advertverificationtoken")
+public class AdvertVerificationToken {
     @Id
     private String id;
 
     private String token;
 
     @DBRef
-    private User user;
+    private Pet advert;
 
     private Date expiryDate;
 
     private boolean verified;
 
-    public VerificationToken() {
+    public AdvertVerificationToken() {
     }
 
-    public VerificationToken(String token, User user) {
+    public AdvertVerificationToken(String token, Pet advert) {
         this.token = token;
-        this.user = user;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
-        this.verified = false;
-    }
-
-    private Date calculateExpiryDate(int expiryTimeInMinutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Timestamp(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
-    }
-
-    public static int getExpiration() {
-        return EXPIRATION;
+        this.advert = advert;
     }
 
     public String getId() {
@@ -64,12 +47,12 @@ public class VerificationToken {
         this.token = token;
     }
 
-    public User getUser() {
-        return user;
+    public Pet getPet() {
+        return advert;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPet(Pet advert) {
+        this.advert = advert;
     }
 
     public Date getExpiryDate() {
@@ -90,10 +73,10 @@ public class VerificationToken {
 
     @Override
     public String toString() {
-        return "VerificationToken{" +
+        return "AdvertVerificationToken{" +
                 "id='" + id + '\'' +
                 ", token='" + token + '\'' +
-                ", user=" + user +
+                ", advert=" + advert +
                 ", expiryDate=" + expiryDate +
                 ", verified=" + verified +
                 '}';
