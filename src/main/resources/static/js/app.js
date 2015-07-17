@@ -3,8 +3,7 @@
  */
 var app = angular.module('app', [
     'ngRoute',
-    'controllers',
-    'ngCookies'
+    'controllers'
 ]);
 
 
@@ -38,6 +37,10 @@ app.config(['$routeProvider',
             when('/registration', {
                 templateUrl: 'partials/registration.html',
                 controller: 'registrationController'
+            }).
+            when('/myaccount', {
+                templateUrl: 'partials/myaccount.html',
+                controller: 'accountController'
             }).
             otherwise({
                 redirectTo: '/index'

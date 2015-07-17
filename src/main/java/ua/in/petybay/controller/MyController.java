@@ -39,7 +39,7 @@ public class MyController {
 
 //    @InitBinder
 //    public void initBinder(WebDataBinder binder){
-//        binder.setDisallowedFields("passwordconfirm");
+//        binder.setDisallowedFields(new String[]{"passwordconfirm"});
 //    }
 
     @Secured({"ROLE_USER"})
@@ -80,7 +80,7 @@ public class MyController {
             authorities.add("ROLE_USER");
             user.setAuthority(authorities);
 
-//            user.setEnabled(false);
+            user.setEnabled(false);
 
             System.out.println("user = " + user);
 
@@ -128,6 +128,15 @@ public class MyController {
     }
 
 
+    @RequestMapping(value = "/allusers", method = RequestMethod.GET)
+    public List<User> getAllUsers() {
+        System.out.println("getAllUsers()");
+        List<User> users = new ArrayList<User>();
+        for(User user : userRepository.findAll()){
+             users.add(user);
+         }
+        return users;
+    }
 
 }
 

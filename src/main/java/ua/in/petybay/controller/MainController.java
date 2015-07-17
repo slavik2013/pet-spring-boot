@@ -47,6 +47,7 @@ public class MainController {
 //    @Secured({"ROLE_ADMIN"})
     public String savePet(@RequestBody Pet pet){
         System.out.println("pet : " + pet);
+        pet.calculateAndSetPublicationDate();
         petService.save(pet);
 
         return "all is ok";
@@ -57,10 +58,13 @@ public class MainController {
     @RequestMapping(value = "/pet/{petId}", method = RequestMethod.GET, produces = "application/json")
     public Pet getPet(@PathVariable("petId") String petId){
         System.out.println("getPet() petId = " + petId);
+        Pet pet = null;
         if(petId != null && !"".equals(petId)){
-           return petRepository.findOne(petId);
+            pet = petRepository.findOne(petId);
+            pet.setViewCount(pet.getViewCount() + 1);
+            petRepository.save(pet);
         }
-        return null;
+        return pet;
     }
 
     @RequestMapping(value = "/pet", method = RequestMethod.GET, produces = "application/json")

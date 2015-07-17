@@ -1,40 +1,14 @@
 /**
  * Created by slavik on 04.04.15.
  */
-var controllers = angular.module('controllers', ['angularFileUpload','ngCookies']);
+var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap', 'smart-table','ngTable']);
 
-//controllers.service('sharedProperties', function () {
-//    var property = 'First';
-//
-//    return {
-//        getProperty: function () {
-//            return property;
-//        },
-//        setProperty: function(value) {
-//            property = value;
-//        }
-//    };
-//});
-
-controllers.factory('myService', function () {
-    var formData = {};
-
-    return {
-        getData: function () {
-            //You could also return specific attribute of the form data instead
-            //of the entire data
-            return formData;
-        },
-        setData: function (newFormData) {
-            //You could also set specific attribute of the form data instead
-            formData = newFormData
-        },
-        resetData: function () {
-            //To be called when the data stored needs to be discarded
-            formData = {};
-        }
+controllers.filter('milisecondsToDateTime', [function() {
+    return function(seconds) {
+        return new Date(seconds);
     };
-});
+}])
+
 
 controllers.directive('ngThumb', function($window) {
     var helper = {
@@ -140,7 +114,7 @@ controllers.controller('loginUserController', function ($scope, $http){
     getUser($scope, $http);
 });
 
-controllers.controller('mainController', function ($scope, $routeParams, $http, $location /*,$cookieStore, $cacheFactory*/) {
+controllers.controller('mainController', function ($scope, $routeParams, $http, $location) {
 
     //if(categoriesCache == null)
     getCategories($scope, $http);
@@ -337,7 +311,7 @@ controllers.controller('petController', function ($scope, $routeParams, $http){
 });
 
 
-controllers.controller('loginController', function ($scope, $routeParams, $http, $location, $window/*, $cookieStore, $cacheFactory*/){
+controllers.controller('loginController', function ($scope, $routeParams, $http, $location, $window){
 
     $scope.user = {};
     //$scope.authenticatedUserCache = $cacheFactory('userCache');
@@ -361,7 +335,7 @@ controllers.controller('loginController', function ($scope, $routeParams, $http,
             //$location.path("/index");
             $window.location.href = '/';
         }).error(function(data){
-
+            $scope.loginError = "email or password is wrong"
         });
 
 }
@@ -374,22 +348,167 @@ controllers.controller('registrationController', function ($scope, $routeParams,
 
         //alert(JSON.stringify($scope.user));
 
-        var req = {
-            method: 'POST',
-            url: '/register',
-            data: $scope.user,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
+        $scope.registrationError = null;
 
-        $http(req).success(function(data){
+        if ($scope.user.email && $scope.user.password && $scope.user.passwordconfirm &&
+            $scope.user.password == $scope.user.passwordconfirm) {
 
-        }).error(function(){
+            delete $scope.user.passwordconfirm;
 
-        });
+            var req = {
+                method: 'POST',
+                url: '/register',
+                data: $scope.user,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
 
+            $http(req).success(function (data) {
+
+            }).error(function () {
+
+            });
+        }
         //$location.path("/adsuccess");
     }
+
+});
+
+
+controllers.controller('accountController', function ($scope, $routeParams, $http, $location, NgTableParams){
+
+    //var data = [{name: "Moroni", age: 50},
+    //    {name: "Tiancum", age: 43},
+    //    {name: "Jacob", age: 27},
+    //    {name: "Nephi", age: 29},
+    //    {name: "Enos", age: 34},
+    //    {name: "Tiancum", age: 43},
+    //    {name: "Jacob", age: 27},
+    //    {name: "Nephi", age: 29},
+    //    {name: "Enos", age: 34},
+    //    {name: "Tiancum", age: 43},
+    //    {name: "Jacob", age: 27},
+    //    {name: "Nephi", age: 29},
+    //    {name: "Enos", age: 34},
+    //    {name: "Tiancum", age: 43},
+    //    {name: "Jacob", age: 27},
+    //    {name: "Nephi", age: 29},
+    //    {name: "Enos", age: 34}];
+
+
+    //var
+    //    nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
+    //    familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
+    //
+    //function createRandomItem() {
+    //    var
+    //        firstName = nameList[Math.floor(Math.random() * 4)],
+    //        lastName = familyName[Math.floor(Math.random() * 4)],
+    //        age = Math.floor(Math.random() * 100),
+    //        email = firstName + lastName + '@whatever.com',
+    //        balance = Math.random() * 3000;
+    //
+    //    return{
+    //        firstName: firstName,
+    //        lastName: lastName,
+    //        age: age,
+    //        email: email,
+    //        balance: balance
+    //    };
+    //}
+    //
+    //$scope.itemsByPage=15;
+    //
+    //$scope.rowCollection = [];
+    //for (var j = 0; j < 200; j++) {
+    //    $scope.rowCollection.push(createRandomItem());
+    //}
+
+    //var ctrl = this;
+    //
+    //this.displayed = [];
+    //
+    //this.callServer = function callServer(tableState) {
+    //
+    //    //ctrl.isLoading = true;
+    //
+    //    var pagination = tableState.pagination;
+    //
+    //    var start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
+    //    var number = pagination.number || 2;  // Number of entries showed per page.
+    //
+    //
+    //};
+
+    $scope.adverts ={};
+
+    var req = {
+        method: 'GET',
+        url:"api/pet",
+        headers: {
+            'Content-Type': undefined
+        }
+    };
+    $http(req).success(function (data) {
+        $scope.rowCollection = data;
+        $scope.adverts = data;
+
+        var publicationDate = new Date(1970,0,1);
+        publicationDate.setSeconds($scope.adverts.publicationDate);
+
+        $scope.adverts.publicationDate = publicationDate;
+
+        $scope.tableParams = new NgTableParams({
+            page: 1,            // show first page
+            count: 5           // count per page
+        }, {
+            total: adverts.length, // length of data
+            getData: function($defer, params) {
+                $defer.resolve($scope.adverts.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
+    });
+
+
+
+
+    $scope.rowCollection = {};
+    $scope.activeAdvertsDataList = {}
+
+    $scope.activeAdverts = function(){
+        $scope.activeAdvertsDataList = [
+            { title:'Active Advert 1', content:'some text for Active Advert 1' },
+            { title:'Active Advert 2', content:'another text for Active Advert 2' }
+        ];
+    };
+
+    $scope.waitingAdverts = function(){
+
+    };
+
+    $scope.nonActiveAdverts = function(){
+
+    };
+
+    $scope.inboxMessages = function(){
+
+    };
+
+    $scope.outboxMessages = function(){
+
+    };
+
+    $scope.archiveMessages = function(){
+
+    };
+
+    $scope.paymentsAndAccount = function(){
+
+    };
+
+    $scope.accountPreferences = function(){
+
+    };
 
 });

@@ -3,6 +3,8 @@ package ua.in.petybay.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -227,6 +229,12 @@ public class Pet {
                 ", user=" + user +
                 ", imageEntity=" + imageEntity +
                 '}';
+    }
+
+    public void calculateAndSetPublicationDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Timestamp(cal.getTime().getTime()));
+        this.setPublicationDate(new Date(cal.getTime().getTime()));
     }
 
     public static Builder getBuilder(){

@@ -22,7 +22,7 @@ public class User {
     private String name;
     private String phone;
     private String skype;
-    @JsonIgnore
+//    @JsonIgnore
     private String password;
     @JsonIgnore
     private List<String> authority;

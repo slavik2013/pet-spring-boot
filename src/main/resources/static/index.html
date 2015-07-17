@@ -9,12 +9,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="css/my.css">
+    <link rel="stylesheet" href="css/ng-table.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-route.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-cookies.min.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="js/smart-table.min.js"></script>
+    <script src="js/ng-table.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="js/angular-file-upload.js"></script>
@@ -32,7 +35,7 @@
                     <strong>My profile {{user.username}}</strong>
                 </a>
 
-                <a class="btn btn-md btn-default noborder blue_color" role="button" href="#" ng-show="authenticatedUser.email">
+                <a class="btn btn-md btn-default noborder blue_color" role="button" href="#/myaccount" ng-show="authenticatedUser.email">
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                     <strong>{{authenticatedUser.email}}</strong>
                 </a>

@@ -9,8 +9,7 @@
 <div class="margin_bottom_10" ng-repeat="petEntity in pets">
     <div class="row" >
         <div class="col-lg-1">
-            Today
-            12:26
+           {{petEntity.publicationDate | milisecondsToDateTime | date:'HH:mm dd MMMM'}}
         </div>
         <div class="col-lg-3">
             <img ng-src={{petEntity.imageEntity[0].htmlLink}} height="100"/>
