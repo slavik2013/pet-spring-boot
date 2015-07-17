@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -18,6 +21,7 @@ import ua.in.petybay.entity.VerificationToken;
 import ua.in.petybay.security.OnRegistrationCompleteEvent;
 import ua.in.petybay.security.PasswordEncoderService;
 import ua.in.petybay.security.SecUserDetails;
+import ua.in.petybay.security.SecUserDetailsService;
 import ua.in.petybay.service.IUserService;
 
 import java.util.ArrayList;
@@ -41,6 +45,39 @@ public class MyController {
 //    public void initBinder(WebDataBinder binder){
 //        binder.setDisallowedFields(new String[]{"passwordconfirm"});
 //    }
+
+    @Autowired
+    SecUserDetailsService secUserDetailsService;
+
+//    @Autowired(required = false)
+//    @Qualifier("authenticationManager")
+//    AuthenticationManager authenticationManager;
+//
+//    @RequestMapping(value = "/makelogin2", method = RequestMethod.POST)
+//    public void loginViaAuthenticationManager(@RequestParam("username") String username,
+//                                              @RequestParam("password") String password){
+//        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+//        Authentication auth = authenticationManager.authenticate(token);
+//        SecurityContextHolder.getContext().setAuthentication(auth);
+//    }
+
+    @RequestMapping(value = "/makelogin", method = RequestMethod.POST)
+    public void login(@RequestParam("username") String username,
+                        @RequestParam("password") String password,
+                        @Qualifier("passwordEncoderService") PasswordEncoderService passwordEncoderService){
+
+        PasswordEncoder passwordEncoder = passwordEncoderService.getPasswordEncoder();
+        UserDetails userDetails = secUserDetailsService.loadUserByUsername(username);
+
+        if(password != null && passwordEncoder.matches(password, userDetails.getPassword())) {
+
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(token);
+            System.out.println("login() ok");
+        }
+
+        System.out.println("login() username = " + username + " ; password = " + password);
+    }
 
     @Secured({"ROLE_USER"})
     @RequestMapping(value = "/user")

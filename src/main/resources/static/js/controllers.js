@@ -1,7 +1,7 @@
 /**
  * Created by slavik on 04.04.15.
  */
-var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap', 'smart-table','ngTable']);
+var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap','ngTable','ngResource']);
 
 controllers.filter('milisecondsToDateTime', [function() {
     return function(seconds) {
@@ -322,7 +322,7 @@ controllers.controller('loginController', function ($scope, $routeParams, $http,
 
         var req = {
             method: 'POST',
-            url: '/login',
+            url: '/makelogin',
             data: $.param($scope.user),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -376,70 +376,8 @@ controllers.controller('registrationController', function ($scope, $routeParams,
 });
 
 
-controllers.controller('accountController', function ($scope, $routeParams, $http, $location, NgTableParams){
+controllers.controller('accountController', function ($scope, $routeParams, $http, $location, NgTableParams, $resource){
 
-    //var data = [{name: "Moroni", age: 50},
-    //    {name: "Tiancum", age: 43},
-    //    {name: "Jacob", age: 27},
-    //    {name: "Nephi", age: 29},
-    //    {name: "Enos", age: 34},
-    //    {name: "Tiancum", age: 43},
-    //    {name: "Jacob", age: 27},
-    //    {name: "Nephi", age: 29},
-    //    {name: "Enos", age: 34},
-    //    {name: "Tiancum", age: 43},
-    //    {name: "Jacob", age: 27},
-    //    {name: "Nephi", age: 29},
-    //    {name: "Enos", age: 34},
-    //    {name: "Tiancum", age: 43},
-    //    {name: "Jacob", age: 27},
-    //    {name: "Nephi", age: 29},
-    //    {name: "Enos", age: 34}];
-
-
-    //var
-    //    nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
-    //    familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
-    //
-    //function createRandomItem() {
-    //    var
-    //        firstName = nameList[Math.floor(Math.random() * 4)],
-    //        lastName = familyName[Math.floor(Math.random() * 4)],
-    //        age = Math.floor(Math.random() * 100),
-    //        email = firstName + lastName + '@whatever.com',
-    //        balance = Math.random() * 3000;
-    //
-    //    return{
-    //        firstName: firstName,
-    //        lastName: lastName,
-    //        age: age,
-    //        email: email,
-    //        balance: balance
-    //    };
-    //}
-    //
-    //$scope.itemsByPage=15;
-    //
-    //$scope.rowCollection = [];
-    //for (var j = 0; j < 200; j++) {
-    //    $scope.rowCollection.push(createRandomItem());
-    //}
-
-    //var ctrl = this;
-    //
-    //this.displayed = [];
-    //
-    //this.callServer = function callServer(tableState) {
-    //
-    //    //ctrl.isLoading = true;
-    //
-    //    var pagination = tableState.pagination;
-    //
-    //    var start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
-    //    var number = pagination.number || 2;  // Number of entries showed per page.
-    //
-    //
-    //};
 
     $scope.adverts ={};
 
@@ -471,7 +409,25 @@ controllers.controller('accountController', function ($scope, $routeParams, $htt
     });
 
 
-
+    //var Api = $resource('pet');
+    //
+    //$scope.tableParams = new ngTableParams({
+    //    page: 1,            // show first page
+    //    count: 10        // count per page
+    //}, {
+    //    total: 0,           // length of data
+    //    getData: function($defer, params) {
+    //        // ajax request to api
+    //        Api.get(params.url(), function(data) {
+    //            $timeout(function() {
+    //                // update table params
+    //                params.total(data.total);
+    //                // set new data
+    //                $defer.resolve(data.result);
+    //            }, 500);
+    //        });
+    //    }
+    //});
 
     $scope.rowCollection = {};
     $scope.activeAdvertsDataList = {}
