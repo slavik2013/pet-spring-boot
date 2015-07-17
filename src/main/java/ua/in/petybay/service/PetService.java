@@ -30,7 +30,9 @@ public class PetService {
 
     public boolean save(Pet pet){
         Category category = categoryRepository.findFirstByName(pet.getCategory().getName());
-        Breed breed = breedRepository.findFirstByName(pet.getBreed().getName());
+        Breed breed = null;
+        if(pet.getBreed() != null)
+            breed = breedRepository.findFirstByName(pet.getBreed().getName());
         pet.setCategory(category);
         pet.setBreed(breed);
         petRepository.save(pet);

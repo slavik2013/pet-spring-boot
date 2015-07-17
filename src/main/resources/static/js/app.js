@@ -19,7 +19,7 @@ app.config(['$routeProvider',
                 templateUrl: 'partials/addadvert.html',
                 controller: 'addadvertController'
             }).
-            when('/petlist', {
+            when('/petlist/:category', {
                 templateUrl: 'partials/petlist.html',
                 controller: 'petlistController'
             }).

@@ -108,6 +108,21 @@ function getPets($scope, $http){
     });
 }
 
+function getPets($scope, $http, category){
+    var req = {
+        method: 'GET',
+        url: 'api/pet/category/'+category,
+        headers: {
+            'Content-Type': undefined
+        }
+    }
+
+    $http(req).success(function(data){
+        $scope.pets = data;
+    }).error(function(){
+        //alert('error');
+    });
+}
 
 controllers.controller('loginUserController', function ($scope, $http){
     //alert("get user");
@@ -128,7 +143,7 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
 controllers.controller('petlistController', function ($scope, $routeParams, $http) {
 
     $scope.pets = {}
-    getPets($scope, $http);
+    getPets($scope, $http, $routeParams.category);
 
 
 });
@@ -322,7 +337,7 @@ controllers.controller('loginController', function ($scope, $routeParams, $http,
 
         var req = {
             method: 'POST',
-            url: '/makelogin',
+            url: '/login',
             data: $.param($scope.user),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -383,7 +398,7 @@ controllers.controller('accountController', function ($scope, $routeParams, $htt
 
     var req = {
         method: 'GET',
-        url:"api/pet",
+        url:"api/mypets",
         headers: {
             'Content-Type': undefined
         }

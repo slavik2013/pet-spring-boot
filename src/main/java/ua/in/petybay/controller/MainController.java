@@ -2,15 +2,15 @@ package ua.in.petybay.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.in.petybay.dao.BreedRepository;
 import ua.in.petybay.dao.CategoryRepository;
 import ua.in.petybay.dao.PetRepository;
-import ua.in.petybay.entity.Breed;
-import ua.in.petybay.entity.Category;
-import ua.in.petybay.entity.ImageEntity;
-import ua.in.petybay.entity.Pet;
+import ua.in.petybay.entity.*;
+import ua.in.petybay.security.SecUserDetails;
 import ua.in.petybay.service.PetService;
 import ua.in.petybay.service.image.picasa.PicasaImageSaver;
 
@@ -54,6 +54,15 @@ public class MainController {
     }
 
 
+    @Secured({"ROLE_USER"})
+    @RequestMapping(value = "/mypets")
+    public List<Pet> getUserInfo(@AuthenticationPrincipal SecUserDetails secUserDetails){
+        User user = secUserDetails.getUser();
+        System.out.println("getUserInfo() user = " + user);
+        List<Pet> pets = petRepository.findByUserEmail(user.getEmail());
+        return pets;
+    }
+
 
     @RequestMapping(value = "/pet/{petId}", method = RequestMethod.GET, produces = "application/json")
     public Pet getPet(@PathVariable("petId") String petId){
@@ -65,6 +74,16 @@ public class MainController {
             petRepository.save(pet);
         }
         return pet;
+    }
+
+    @RequestMapping(value = "/pet/category/{category}", method = RequestMethod.GET, produces = "application/json")
+    public List<Pet> getPetsByCategory(@PathVariable("category") String category){
+        System.out.println("getPetByCategory() category = " + category);
+        List<Pet> pets = null;
+        if(category != null && !"".equals(category)){
+            pets = petRepository.findByCategoryName(category);
+        }
+        return pets;
     }
 
     @RequestMapping(value = "/pet", method = RequestMethod.GET, produces = "application/json")
