@@ -212,11 +212,19 @@ function getAdsCountByCategoryByPage($scope, $http, category){
         url: 'api/pet/category/'+category+'/count',
         headers: {
             'Content-Type': undefined
-        }
+        },
+        cache: true
     };
 
     $http(req).success(function(data){
         $scope.totalItems = data;
+
+        $scope.maxSize = data / $scope.itemsPerPage;
+
+        if ((data % $scope.itemsPerPage) != 0) {
+            $scope.maxSize++;
+        }
+
     }).error(function(){
     });
 }
@@ -274,7 +282,7 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
 });
 
 
-controllers.controller('petlistController', function ($scope, $routeParams, $http) {
+controllers.controller('petlistController', function ($scope, $routeParams, $http, $location) {
 
     $scope.pets = {};
     //getPets($scope, $http, $routeParams.category);
@@ -283,16 +291,14 @@ controllers.controller('petlistController', function ($scope, $routeParams, $htt
 
     $scope.totalItems = 10;
     $scope.currentPage = 1;
-    $scope.maxSize = 2;
+    if($routeParams.page)
+        $scope.currentPage = $routeParams.page;
+    //$scope.maxSize = 2;
     $scope.itemsPerPage = 2;
 
     getAdsCountByCategoryByPage($scope, $http, $routeParams.category);
 
-    $scope.maxSize = $scope.totalItems / $scope.itemsPerPage;
 
-    if (($scope.totalItems % $scope.itemsPerPage) != 0) {
-        $scope.maxSize++;
-    }
 
 
     getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage);
@@ -302,7 +308,8 @@ controllers.controller('petlistController', function ($scope, $routeParams, $htt
     };
 
     $scope.pageChanged = function() {
-        getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage)
+        $location.path("/petlist/" + $routeParams.category + "/page/" + $scope.currentPage);
+        //getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage)
     };
 
 

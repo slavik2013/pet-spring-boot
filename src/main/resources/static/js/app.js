@@ -38,6 +38,10 @@ app.config(['$routeProvider',
                 templateUrl: 'partials/petlist.html',
                 controller: 'petlistController'
             }).
+            when('/petlist/:category/page/:page', {
+                templateUrl: 'partials/petlist.html',
+                controller: 'petlistController'
+            }).
             when('/adsuccess', {
                 templateUrl: 'partials/adsuccess.html'
             }).

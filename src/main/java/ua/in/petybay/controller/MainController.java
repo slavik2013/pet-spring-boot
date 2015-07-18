@@ -162,7 +162,7 @@ public class MainController {
         return petList;
     }
 
-    @RequestMapping(value = "/pet/category/{category}/count", method = RequestMethod.GET, produces = "plain/text")
+    @RequestMapping(value = "/pet/category/{category}/count", method = RequestMethod.GET)
     public Long getAdsCountByCategory(@PathVariable("category") String category){
 
         Long adsCountByCategory  = petRepository.countByCategoryNameAndState(category, Pet.STATE.ACTIVE);
