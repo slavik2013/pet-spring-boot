@@ -9,7 +9,7 @@
     <form class="form-inline" role="form">
         <input type="email" class="form-control" id="inputEmail" placeholder="Keyword">
         <input type="password" class="form-control" id="inputPassword" placeholder="Location">
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary">{{ 'SEARCH' | translate }}</button>
     </form>
 </div>
 
@@ -26,19 +26,19 @@
     </div>
     <div class="col-md-5 col-sm-5">
         <div class="leftbar">
-            <h3>Fast, Easy and Free</h3>
+            <h3>{{ 'FAST_EASY_FREE' | translate }}</h3>
             <div class="add_advert">
                 <a href="#/addadvert">
                     <div class="btn btn-lg btn-success" role="button">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add advert
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {{ 'ADD_ADVERT' | translate }}
 
                     </div>
                 </a>
             </div>
             <div class="pluses">
-                <h5><span class="glyphicon glyphicon-ok green" aria-hidden="true"></span> Free and without registration</h5>
-                <h5><span class="glyphicon glyphicon-ok green" aria-hidden="true"></span> Up to 8 photos in advert</h5>
-                <h5><span class="glyphicon glyphicon-ok green" aria-hidden="true"></span> Is active up to 30 days</h5>
+                <h5><span class="glyphicon glyphicon-ok green" aria-hidden="true"></span> {{ 'FREE_AND_WITHOUT_REGISTRATION' | translate }}</h5>
+                <h5><span class="glyphicon glyphicon-ok green" aria-hidden="true"></span> {{ 'UP_TO_8_PHOTOS_IN_ADVERT' | translate }}</h5>
+                <h5><span class="glyphicon glyphicon-ok green" aria-hidden="true"></span> {{ 'IS_ACTIVE_UP_TO_30_DAYS' | translate }}</h5>
             </div>
         </div>
 

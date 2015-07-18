@@ -30,7 +30,7 @@
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-file-upload/1.1.5/angular-file-upload.min.js"></script>-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bower-angular-translate/2.7.1/angular-translate.min.js"></script>
 </head>
 
 <body>
@@ -42,7 +42,7 @@
 
                 <a class="btn btn-md btn-default noborder blue_color" role="button" href="#/login" ng-show="!authenticatedUser.email">
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                    <strong>My profile {{user.username}}</strong>
+                    <strong>{{ 'MY_PROFILE' | translate }}</strong>
                 </a>
 
                 <a class="btn btn-md btn-default noborder blue_color" role="button" href="#/myaccount" ng-show="authenticatedUser.email">
@@ -52,8 +52,19 @@
 
                 <a class="btn btn-md btn-default noborder color_yellow" role="button" href="#/addadvert">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    <strong>Add advert</strong>
+                    <strong>{{ 'ADD_ADVERT' | translate }}</strong>
                 </a>
+
+                <div class="btn-group" dropdown is-open="status.isopen">
+                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+                        {{ 'LANGUAGE' | translate }} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><button type="button" ng-click="changeLanguage('en')">Enlish language</button></li>
+                        <li><button type="button" ng-click="changeLanguage('ru')">Русский язык</button></li>
+                        <li><button type="button" ng-click="changeLanguage('ua')">Українська мова</button></li>
+                    </ul>
+                </div>
             </ul>
         </nav>
         <h3 class="color_red"><strong><a href="#/index">PetyBay</a></strong></h3>

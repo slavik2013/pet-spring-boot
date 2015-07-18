@@ -1,14 +1,82 @@
 /**
  * Created by slavik on 04.04.15.
  */
-var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap','ngTable','ngResource']);
+var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap','ngTable','ngResource','pascalprecht.translate']);
 
 controllers.filter('milisecondsToDateTime', [function() {
     return function(seconds) {
         return new Date(seconds);
     };
-}])
+}]);
 
+var translations_en = {
+    LANGUAGE: 'Language',
+    MY_PROFILE: 'My profile',
+    ADD_ADVERT: 'Add advert',
+    SEARCH: 'Search',
+    FAST_EASY_FREE : 'Fast, Easy and Free',
+    FREE_AND_WITHOUT_REGISTRATION :'Free and without registration',
+    UP_TO_8_PHOTOS_IN_ADVERT: 'Up to 8 photos in advert',
+    IS_ACTIVE_UP_TO_30_DAYS:'Is active up to 30 days',
+    ADDED: 'Added',
+    IN: 'in',
+    NUMBER : 'number',
+    VIEWS:'Views',
+    WRITE_TO_AUTHOR:'Write to author',
+    SHOW_ON_MAP: 'Show on the map',
+    TO_FAVORITES: 'To favorites',
+    CHANGE: 'Change',
+    COMPLAINT: 'Complaint'
+};
+
+var translations_ru = {
+    LANGUAGE: 'Язык',
+    MY_PROFILE: 'Мой профиль',
+    ADD_ADVERT: 'Подать объявление',
+    SEARCH: 'Поиск',
+    FAST_EASY_FREE : 'Быстро, Просто и Бесплатно',
+    FREE_AND_WITHOUT_REGISTRATION :'Бесплатно и без регистрации',
+    UP_TO_8_PHOTOS_IN_ADVERT: 'До 8 фото в объявлении',
+    IS_ACTIVE_UP_TO_30_DAYS:'Активно до 30 дней',
+    ADDED: 'Добавлено',
+    IN: 'в',
+    NUMBER : 'номер',
+    VIEWS:'Просмотров',
+    WRITE_TO_AUTHOR:'Написать автору',
+    SHOW_ON_MAP: 'Показать на карте',
+    TO_FAVORITES: 'В избранные',
+    CHANGE: 'Изменить',
+    COMPLAINT: 'Жалоба'
+};
+
+var translations_ua = {
+    LANGUAGE: 'Мова',
+    MY_PROFILE: 'Мій профіль',
+    ADD_ADVERT: 'Додати оголошення',
+    SEARCH: 'Пошук',
+    FAST_EASY_FREE : 'Швидко, Просто і Безкоштовно',
+    FREE_AND_WITHOUT_REGISTRATION :'Безкоштовно і без реєстрації',
+    UP_TO_8_PHOTOS_IN_ADVERT: 'До 8 фотографій в оголошенні',
+    IS_ACTIVE_UP_TO_30_DAYS:'Активне до 30 днів',
+    ADDED: 'Опубліковано',
+    IN: 'в',
+    NUMBER : 'номер',
+    VIEWS:'Переглядів',
+    WRITE_TO_AUTHOR:'Написати автору',
+    SHOW_ON_MAP: 'Показати на карті',
+    TO_FAVORITES: 'В обрані',
+    CHANGE: 'Змінити',
+    COMPLAINT: 'Скарга'
+};
+
+controllers.config(['$translateProvider', function ($translateProvider) {
+    // add translation table
+    $translateProvider
+        .translations('en', translations_en)
+        .translations('ru', translations_ru)
+        .translations('ua', translations_ua)
+        .preferredLanguage('ru');
+}]);
 
 controllers.directive('ngThumb', function($window) {
     var helper = {
@@ -54,7 +122,6 @@ controllers.directive('ngThumb', function($window) {
         }
     };
 });
-
 
 
 var categoriesCache = null;
@@ -124,9 +191,24 @@ function getPets($scope, $http, category){
     });
 }
 
-controllers.controller('loginUserController', function ($scope, $http){
+controllers.controller('loginUserController', function ($scope, $http, $translate){
     //alert("get user");
     getUser($scope, $http);
+
+    $scope.status = {
+        isopen: false
+    };
+
+    $scope.toggleDropdown = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.status.isopen = !$scope.status.isopen;
+    };
+
+    $scope.changeLanguage = function (key) {
+        $translate.use(key);
+    };
+
 });
 
 controllers.controller('mainController', function ($scope, $routeParams, $http, $location) {

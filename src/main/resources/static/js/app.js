@@ -3,10 +3,25 @@
  */
 var app = angular.module('app', [
     'ngRoute',
-    'controllers'
+    'controllers',
+    'pascalprecht.translate'
 ]);
 
-
+//var translations_en = {
+//    MY_PROFILE: 'My profile'
+//};
+//
+//var translations_ru = {
+//    MY_PROFILE: 'Мой профиль'
+//};
+//
+//app.config(['$translateProvider', function ($translateProvider) {
+//    // add translation table
+//    $translateProvider
+//        .translations('en', translations_en)
+//        .translations('ru', translations_ru)
+//        .preferredLanguage('ru');
+//}]);
 
 app.config(['$routeProvider',
     function($routeProvider) {
