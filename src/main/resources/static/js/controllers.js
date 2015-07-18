@@ -444,12 +444,20 @@ function deactivateAd($scope, $http, adId){
     });
 }
 
+function deleteItemFromAdverts(adverts, advertId){
+    for (var i = 0, len = adverts.length; i<len; i++) {
+        if (adverts[i].id == advertId) {
+            adverts.splice(i, 1);
+            break;
+        }
+    };
+}
 
 
 controllers.controller('accountController', function ($scope, $routeParams, $http, $location, NgTableParams, $resource){
 
 
-    $scope.adverts ={};
+    $scope.adverts = {};
 
     $scope.rowCollection = {};
     $scope.activeAdvertsDataList = {};
@@ -457,14 +465,17 @@ controllers.controller('accountController', function ($scope, $routeParams, $htt
 
     $scope.confirmAd = function(advertId){
         confirmAd($scope, $http, advertId);
+        deleteItemFromAdverts($scope.adverts, advertId);
     };
 
     $scope.deactivateAd = function(advertId){
         deactivateAd($scope, $http, advertId);
+        deleteItemFromAdverts($scope.adverts, advertId);
     };
 
     $scope.activateAd = function(advertId){
         confirmAd($scope, $http, advertId);
+        deleteItemFromAdverts($scope.adverts, advertId);
     };
 
 

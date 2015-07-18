@@ -54,7 +54,7 @@
                     </thead>
                     <tbody ng-repeat="advert in adverts">
                     <tr>
-                        <td>{{advert.publicationDate | milisecondsToDateTime | date:'HH:mm dd/MM/yyyy'}}</td>
+                        <td>{{advert.publicationDate | milisecondsToDateTime | date:'dd/MM/yyyy'}}</td>
                         <td>
                             <div>
                                 <img ng-src={{advert.imageEntity[0].htmlLink}} height="50"/>
