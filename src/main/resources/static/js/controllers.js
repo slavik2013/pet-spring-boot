@@ -191,7 +191,25 @@ function getPets($scope, $http, category){
     });
 }
 
-controllers.controller('loginUserController', function ($scope, $http, $translate){
+function userLogout($scope, $http, $window){
+    var req = {
+        method: 'GET',
+        url: '/logout',
+        headers: {
+            'Content-Type': undefined
+        }
+    }
+
+    $http(req).success(function(data){
+
+    }).error(function(){
+
+    });
+    $scope.authenticatedUser = undefined;
+    $window.location.href = '/';
+}
+
+controllers.controller('loginUserController', function ($scope, $http, $translate, $window){
     //alert("get user");
     getUser($scope, $http);
 
@@ -209,6 +227,9 @@ controllers.controller('loginUserController', function ($scope, $http, $translat
         $translate.use(key);
     };
 
+    $scope.userLogout = function(){
+        userLogout($scope, $http, $window);
+    }
 });
 
 controllers.controller('mainController', function ($scope, $routeParams, $http, $location) {

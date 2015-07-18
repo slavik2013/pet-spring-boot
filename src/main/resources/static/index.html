@@ -45,10 +45,17 @@
                     <strong>{{ 'MY_PROFILE' | translate }}</strong>
                 </a>
 
-                <a class="btn btn-md btn-default noborder blue_color" role="button" href="#/myaccount" ng-show="authenticatedUser.email">
-                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                    <strong>{{authenticatedUser.email}}</strong>
-                </a>
+
+
+                <li class="dropdown" ng-show="authenticatedUser.email">
+                    <a class="btn btn-md btn-default noborder blue_color" role="button" href="#/myaccount" ng-show="authenticatedUser.email">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        <strong>{{authenticatedUser.email}}</strong>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-click="userLogout()"><a>Logout</a></li>
+                    </ul>
+                </li>
 
                 <a class="btn btn-md btn-default noborder color_yellow" role="button" href="#/addadvert">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
