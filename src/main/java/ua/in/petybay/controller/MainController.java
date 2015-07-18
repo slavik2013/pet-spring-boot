@@ -3,6 +3,8 @@ package ua.in.petybay.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
@@ -131,6 +133,41 @@ public class MainController {
             pets = petRepository.findByCategoryNameAndState(category, Pet.STATE.ACTIVE);
         }
         return pets;
+    }
+
+    @RequestMapping(value = "/pet/category/{category}/page/{page}", method = RequestMethod.GET, produces = "application/json")
+    public List<Pet> getAdsByCategoryByPage(@PathVariable("category") String category,
+                                             @PathVariable("page") int page){
+        System.out.println("getPetsByCategoryByPage() category = " + category + " ; page = " + page);
+        Page<Pet> petsPage = petRepository.findByCategoryNameAndState(category, Pet.STATE.ACTIVE, new PageRequest(page - 1, 5));
+
+        List<Pet> petList = petsPage.getContent();
+
+        System.out.println("getPetsByCategoryByPage() petList.size() = " + petList.size());
+
+        return petList;
+    }
+
+    @RequestMapping(value = "/pet/category/{category}/page/{page}/itemsperpage/{itemsperpage}", method = RequestMethod.GET, produces = "application/json")
+    public List<Pet> getAdsByCategoryByPageByItemsPerPage(@PathVariable("category") String category,
+                                            @PathVariable("page") int page,
+                                            @PathVariable("itemsperpage") int itemsPerPage){
+        System.out.println("getAdsByCategoryByPageByItemsPerPage() category = " + category + " ; page = " + page + " ; itemsPerPage = " + itemsPerPage);
+        Page<Pet> petsPage = petRepository.findByCategoryNameAndState(category, Pet.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
+
+        List<Pet> petList = petsPage.getContent();
+
+        System.out.println("getAdsByCategoryByPageByItemsPerPage() petList.size() = " + petList.size());
+
+        return petList;
+    }
+
+    @RequestMapping(value = "/pet/category/{category}/count", method = RequestMethod.GET, produces = "plain/text")
+    public Long getAdsCountByCategory(@PathVariable("category") String category){
+
+        Long adsCountByCategory  = petRepository.countByCategoryNameAndState(category, Pet.STATE.ACTIVE);
+        System.out.println("getAdsCountByCategory() count = " + adsCountByCategory);
+        return adsCountByCategory;
     }
 
     @RequestMapping(value = "/pet", method = RequestMethod.GET, produces = "application/json")

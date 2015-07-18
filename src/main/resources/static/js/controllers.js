@@ -159,21 +159,21 @@ function getUser($scope, $http){
     });
 }
 
-function getPets($scope, $http){
-    var req = {
-        method: 'GET',
-        url: 'api/pet',
-        headers: {
-            'Content-Type': undefined
-        }
-    }
-
-    $http(req).success(function(data){
-        $scope.pets = data;
-    }).error(function(){
-        //alert('error');
-    });
-}
+//function getPets($scope, $http){
+//    var req = {
+//        method: 'GET',
+//        url: 'api/pet',
+//        headers: {
+//            'Content-Type': undefined
+//        }
+//    }
+//
+//    $http(req).success(function(data){
+//        $scope.pets = data;
+//    }).error(function(){
+//        //alert('error');
+//    });
+//}
 
 function getPets($scope, $http, category){
     var req = {
@@ -191,6 +191,37 @@ function getPets($scope, $http, category){
     });
 }
 
+function getAdsByCategoryByPage($scope, $http, category, page, itemsPerPage){
+    var req = {
+        method: 'GET',
+        url: 'api/pet/category/'+category+'/page/' + page + '/itemsperpage/' + itemsPerPage,
+        headers: {
+            'Content-Type': undefined
+        }
+    };
+
+    $http(req).success(function(data){
+        $scope.pets = data;
+    }).error(function(){
+    });
+}
+
+function getAdsCountByCategoryByPage($scope, $http, category){
+    var req = {
+        method: 'GET',
+        url: 'api/pet/category/'+category+'/count',
+        headers: {
+            'Content-Type': undefined
+        }
+    };
+
+    $http(req).success(function(data){
+        $scope.totalItems = data;
+    }).error(function(){
+    });
+}
+
+
 function userLogout($scope, $http, $window){
     var req = {
         method: 'GET',
@@ -198,7 +229,7 @@ function userLogout($scope, $http, $window){
         headers: {
             'Content-Type': undefined
         }
-    }
+    };
 
     $http(req).success(function(data){
 
@@ -245,8 +276,36 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
 
 controllers.controller('petlistController', function ($scope, $routeParams, $http) {
 
-    $scope.pets = {}
-    getPets($scope, $http, $routeParams.category);
+    $scope.pets = {};
+    //getPets($scope, $http, $routeParams.category);
+
+
+
+    $scope.totalItems = 10;
+    $scope.currentPage = 1;
+    $scope.maxSize = 2;
+    $scope.itemsPerPage = 2;
+
+    getAdsCountByCategoryByPage($scope, $http, $routeParams.category);
+
+    $scope.maxSize = $scope.totalItems / $scope.itemsPerPage;
+
+    if (($scope.totalItems % $scope.itemsPerPage) != 0) {
+        $scope.maxSize++;
+    }
+
+
+    getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage);
+
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+    };
+
+    $scope.pageChanged = function() {
+        getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage)
+    };
+
+
 
 
 });

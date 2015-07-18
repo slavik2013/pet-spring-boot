@@ -1,5 +1,7 @@
 package ua.in.petybay.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import ua.in.petybay.entity.Pet;
 
@@ -18,4 +20,9 @@ public interface PetRepository extends MongoRepository<Pet, String> {
     List<Pet> findByCategoryNameAndState(String categoryName, Pet.STATE state);
 
     List<Pet> findByUserEmailAndState(String userEmail, Pet.STATE state);
+
+    Page<Pet> findByCategoryNameAndState(String userEmail, Pet.STATE state, Pageable pageable);
+
+    Long countByCategoryNameAndState(String categoryName, Pet.STATE state);
+
 }
