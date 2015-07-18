@@ -392,7 +392,7 @@ controllers.controller('registrationController', function ($scope, $routeParams,
 
 
 
-function getMyads($scope, $http,NgTableParams, adState){
+function getMyads($scope, $http, adState){
 
     var req = {
         method: 'GET',
@@ -402,15 +402,49 @@ function getMyads($scope, $http,NgTableParams, adState){
         }
     };
     $http(req).success(function (data) {
-        alert("success getMyads() adState = " + adState);
+
         $scope.rowCollection = data;
         $scope.adverts = data;
 
 
     }).error(function(data){
-        alert("error getMyads() adState = " + adState + " ; data = " + JSON.stringify(data));
+
     });
 }
+
+function confirmAd($scope, $http, adId){
+
+    var req = {
+        method: 'GET',
+        url:'confirmAd/' + adId,
+        headers: {
+            'Content-Type': undefined
+        }
+    };
+    $http(req).success(function (data) {
+
+    }).error(function(data){
+
+    });
+}
+
+function deactivateAd($scope, $http, adId){
+
+    var req = {
+        method: 'GET',
+        url:'deactivateAd/' + adId,
+        headers: {
+            'Content-Type': undefined
+        }
+    };
+    $http(req).success(function (data) {
+
+    }).error(function(data){
+
+    });
+}
+
+
 
 controllers.controller('accountController', function ($scope, $routeParams, $http, $location, NgTableParams, $resource){
 
@@ -420,64 +454,30 @@ controllers.controller('accountController', function ($scope, $routeParams, $htt
     $scope.rowCollection = {};
     $scope.activeAdvertsDataList = {};
 
-    $scope.tableParams = new NgTableParams({
-        page: 1,            // show first page
-        count: 5           // count per page
-    }, {
-        total: adverts.length, // length of data
-        getData: function($defer, params) {
-            $defer.resolve($scope.adverts.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-        }
-    });
 
-    var adState = "ACTIVE";
+    $scope.confirmAd = function(advertId){
+        confirmAd($scope, $http, advertId);
+    };
 
-    //var req = {
-    //    method: 'GET',
-    //    url:'api/myads/ACTIVE',
-    //    headers: {
-    //        'Content-Type': undefined
-    //    }
-    //};
-    //$http(req).success(function (data) {
-    //    alert("success getMyads() adState = " + adState);
-    //}).error(function(data){
-    //    alert("error getMyads() adState = " + adState + " ; data = " + JSON.stringify(data));
-    //});
+    $scope.deactivateAd = function(advertId){
+        deactivateAd($scope, $http, advertId);
+    };
 
-
-    //var req = {
-    //    method: 'GET',
-    //    url: 'api/text/active',
-    //    headers: {
-    //        'Content-Type': 'undefined'
-    //    }
-    //};
-    //
-    //$http(req).success(function (data) {
-    //    alert("success getMyads() adState = " + adState);
-    //}).error(function (data, status, headers, config) {
-    //    alert("error getMyads() data = " + JSON.stringify(data) + " ; status = " + JSON.stringify(status)
-    //    + " ; headers = " + JSON.stringify(headers) + " ; config = " + JSON.stringify(config));
-    //});
-
-
-    //$resource("/api/userad/advertisement/active").get(function(data){
-    //
-    //});
-
+    $scope.activateAd = function(advertId){
+        confirmAd($scope, $http, advertId);
+    };
 
 
     $scope.activeAdverts = function(){
-        getMyads($scope, $http,NgTableParams, "ACTIVE");
+        getMyads($scope, $http, "ACTIVE");
     };
 
     $scope.waitingAdverts = function(){
-        getMyads($scope, $http, NgTableParams,"WAITING");
+        getMyads($scope, $http, "WAITING");
     };
 
     $scope.nonActiveAdverts = function(){
-        //getMyads($scope, $http, "NONACTIVE");
+        getMyads($scope, $http, "NONACTIVE");
     };
 
     $scope.inboxMessages = function(){

@@ -190,14 +190,51 @@ public class MyController {
 
         Pet advert = verificationToken.getPet();
 
-        advert.setState(Pet.STATE.ACTIVE);
+        if (Pet.STATE.WAITING.equals(advert.getState())) {
+            advert.setState(Pet.STATE.ACTIVE);
 
-        petRepository.save(advert);
-
+            petRepository.save(advert);
+        }
         verificationToken.setVerified(true);
         advertVerificationTokenRepository.save(verificationToken);
         return "advertisement activated";
     }
+
+
+    @Secured({"ROLE_USER"})
+    @RequestMapping(value = "/confirmAd/{adId}")
+    public String confirmUserAd(@PathVariable("adId") String adId,
+            @AuthenticationPrincipal SecUserDetails secUserDetails){
+
+        User user = secUserDetails.getUser();
+
+       Pet advert = petRepository.findOne(adId);
+        User advertUser = advert.getUser();
+
+        if (advertUser.getEmail().equals(user.getEmail())) {
+            advert.setState(Pet.STATE.ACTIVE);
+            petRepository.save(advert);
+        }
+      return "ad confirmed";
+    }
+
+    @Secured({"ROLE_USER"})
+    @RequestMapping(value = "/deactivateAd/{adId}")
+    public String deactivateUserAd(@PathVariable("adId") String adId,
+                                @AuthenticationPrincipal SecUserDetails secUserDetails){
+
+        User user = secUserDetails.getUser();
+
+        Pet advert = petRepository.findOne(adId);
+        User advertUser = advert.getUser();
+
+        if (advertUser.getEmail().equals(user.getEmail())) {
+            advert.setState(Pet.STATE.NONACTIVE);
+            petRepository.save(advert);
+        }
+        return "ad deactivated";
+    }
+
 
     @RequestMapping(value = "/allusers", method = RequestMethod.GET)
     public List<User> getAllUsers() {

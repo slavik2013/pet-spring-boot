@@ -3,14 +3,59 @@
 <tabset justified="true">
     <tab heading="Adverts">
         <tabset >
-            <tab heading="Active" select="activeAdverts()">
-                <table ng-table="tableParams" class="table ng-table-responsive">
+            <tab heading="Active ({{adverts.length}})" select="activeAdverts()">
+                <!--<table ng-table="tableParams" class="table ng-table-responsive">-->
+                    <!--<tbody ng-repeat="advert in adverts">-->
+                    <!--<tr>-->
+                        <!--<td data-title="'Date'">-->
+                            <!--{{advert.publicationDate | milisecondsToDateTime | date:'HH:mm dd/MM/yyyy'}}-->
+                        <!--</td>-->
+                        <!--<td data-title="'Title'">-->
+                            <!--<div>-->
+                                <!--<img ng-src={{advert.imageEntity[0].htmlLink}} height="50"/>-->
+                                <!--{{advert.title}}-->
+                            <!--</div>-->
+                            <!--<div>-->
+                                <!--<a href="#/pet/{{advert.id}}">View</a> Edit Deactivate-->
+                            <!--</div>-->
+                        <!--</td>-->
+
+                        <!--<td data-title="'Price'">-->
+                            <!--{{advert.price.price}}-->
+                        <!--</td>-->
+                        <!--<td data-title="'Messages'">-->
+                            <!--1 message-->
+                        <!--</td>-->
+                        <!--<td data-title="'Action'">-->
+                            <!--advertisement-->
+                        <!--</td>-->
+                    <!--</tr>-->
+
+                    <!--<tr>-->
+                        <!--<td>Statistics:</td>-->
+                        <!--<td>View: {{advert.viewCount}}</td>-->
+                        <!--<td>Phone: 23</td>-->
+                        <!--<td>ICQ: 3390</td>-->
+                        <!--<td>Skype: 12</td>-->
+                        <!--<td>Favorite: 2</td>-->
+                    <!--</tr>-->
+                    <!--</tbody>-->
+                <!--</table>-->
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Messages</th>
+                        <th>Action</th>
+                        <th>Statistic</th>
+                    </tr>
+                    </thead>
                     <tbody ng-repeat="advert in adverts">
                     <tr>
-                        <td data-title="'Date'">
-                            {{advert.publicationDate | milisecondsToDateTime | date:'HH:mm dd/MM/yyyy'}}
-                        </td>
-                        <td data-title="'Title'">
+                        <td>{{advert.publicationDate | milisecondsToDateTime | date:'HH:mm dd/MM/yyyy'}}</td>
+                        <td>
                             <div>
                                 <img ng-src={{advert.imageEntity[0].htmlLink}} height="50"/>
                                 {{advert.title}}
@@ -19,35 +64,171 @@
                                 <a href="#/pet/{{advert.id}}">View</a> Edit Deactivate
                             </div>
                         </td>
-
-                        <td data-title="'Price'">
-                            {{advert.price.price}}
+                        <td>{{advert.price.price}} {{advert.price.currency}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <span class="badge">4</span>
+                            </button>
                         </td>
-                        <td data-title="'Messages'">
-                            1 message
+                        <td>
+                            <button type="button" class="btn btn-danger" ng-click="deactivateAd(advert.id)" >
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Deactivate
+                            </button>
                         </td>
-                        <td data-title="'Action'">
-                            advertisement
+                        <td>
+                          <table >
+                              <tbody>
+                            <tr>
+                                <td>Views:</td>
+                                <td>{{advert.viewCount}}</td>
+                            </tr>
+                            <tr>
+                                <td>Phone:</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Skype:</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Favorite:</td>
+                                <td>0</td>
+                            </tr>
+                              </tbody>
+                        </table>
                         </td>
                     </tr>
 
-                    <tr>
-                        <td>Statistics:</td>
-                        <td>View: {{advert.viewCount}}</td>
-                        <td>Phone: 23</td>
-                        <td>ICQ: 3390</td>
-                        <td>Skype: 12</td>
-                        <td>Favorite: 2</td>
-                    </tr>
                     </tbody>
                 </table>
 
             </tab>
-            <tab heading="Waiting" select="waitingAdverts()">
+            <tab heading="Waiting ({{adverts.length}})" select="waitingAdverts()">
                 <div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Title</th>
+                            <th>Price</th>
+                            <th>Messages</th>
+                            <th>Action</th>
+                            <th>Statistic</th>
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="advert in adverts">
+                        <tr>
+                            <td>{{advert.publicationDate | milisecondsToDateTime | date:'HH:mm dd/MM/yyyy'}}</td>
+                            <td>
+                                <div>
+                                    <img ng-src={{advert.imageEntity[0].htmlLink}} height="50"/>
+                                    {{advert.title}}
+                                </div>
+                                <div>
+                                    <a href="#/pet/{{advert.id}}">View</a> Edit Deactivate
+                                </div>
+                            </td>
+                            <td>{{advert.price.price}}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <span class="badge">4</span>
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary" ng-click="confirmAd(advert.id)" >
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Confirm
+                                </button>
+                            </td>
+                            <td>
+                                <table >
+                                    <tbody>
+                                    <tr>
+                                        <td>Views:</td>
+                                        <td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone:</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Skype:</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Favorite: </td>
+                                        <td>0</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
                 </div>
             </tab>
-            <tab heading="Non active" select="nonActiveAdverts()">Non active adverts</tab>
+            <tab heading="Non active ({{adverts.length}})" select="nonActiveAdverts()">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Messages</th>
+                        <th>Action</th>
+                        <th>Statistic</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="advert in adverts">
+                    <tr>
+                        <td>{{advert.publicationDate | milisecondsToDateTime | date:'HH:mm dd/MM/yyyy'}}</td>
+                        <td>
+                            <div>
+                                <img ng-src={{advert.imageEntity[0].htmlLink}} height="50"/>
+                                {{advert.title}}
+                            </div>
+                            <div>
+                                <a href="#/pet/{{advert.id}}">View</a> Edit Deactivate
+                            </div>
+                        </td>
+                        <td>{{advert.price.price}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <span class="badge">4</span>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" ng-click="activateAd(advert.id)" >
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Activate
+                            </button>
+                        </td>
+                        <td>
+                            <table >
+                                <tbody>
+                                <tr>
+                                    <td>Views:</td>
+                                    <td>12</td>
+                                </tr>
+                                <tr>
+                                    <td>Phone:</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>Skype:</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>Favorite:</td>
+                                    <td>0</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </tab>
         </tabset>
     </tab>
     <tab heading="Messages">
