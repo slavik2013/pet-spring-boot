@@ -453,6 +453,9 @@ function deleteItemFromAdverts(adverts, advertId){
     };
 }
 
+function viewAdvert($location, advertId){
+    $location.path("/pet/" + advertId);
+}
 
 controllers.controller('accountController', function ($scope, $routeParams, $http, $location, NgTableParams, $resource){
 
@@ -462,6 +465,9 @@ controllers.controller('accountController', function ($scope, $routeParams, $htt
     $scope.rowCollection = {};
     $scope.activeAdvertsDataList = {};
 
+    $scope.viewAdvert = function(advertId){
+        viewAdvert($location, advertId);
+    };
 
     $scope.confirmAd = function(advertId){
         confirmAd($scope, $http, advertId);

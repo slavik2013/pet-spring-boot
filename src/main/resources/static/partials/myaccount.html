@@ -48,7 +48,7 @@
                         <th>Title</th>
                         <th>Price</th>
                         <th>Messages</th>
-                        <th>Action</th>
+                        <!--<th>Action</th>-->
                         <th>Statistic</th>
                     </tr>
                     </thead>
@@ -61,8 +61,24 @@
                                 {{advert.title}}
                             </div>
                             <div>
-                                <a href="#/pet/{{advert.id}}">View</a> Edit Deactivate
+                                <!--<a href="#/pet/{{advert.id}}">View</a> Edit Deactivate-->
+
+
+                                <button type="button" class="btn btn-success btn-xs" ng-click="viewAdvert(advert.id)" >
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> View
+                                </button>
+
+                                <button type="button" class="btn btn-warning btn-xs" ng-click="" >
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Edit
+                                </button>
+
+                                <button type="button" class="btn btn-danger btn-xs" ng-click="deactivateAd(advert.id)" >
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Deactivate
+                                </button>
                             </div>
+
+
+
                         </td>
                         <td>{{advert.price.price}} {{advert.price.currency}}</td>
                         <td>
@@ -70,11 +86,33 @@
                                 <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <span class="badge">4</span>
                             </button>
                         </td>
-                        <td>
-                            <button type="button" class="btn btn-danger" ng-click="deactivateAd(advert.id)" >
-                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Deactivate
-                            </button>
-                        </td>
+                        <!--<td>-->
+                            <!--<table >-->
+                                <!--<tbody>-->
+                                <!--<tr>-->
+                                    <!--<td>-->
+                                        <!--<button type="button" class="btn btn-success btn-xs" ng-click="viewAdvert(advert.id)" >-->
+                                            <!--<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> View-->
+                                        <!--</button>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--<tr>-->
+                                    <!--<td>-->
+                                        <!--<button type="button" class="btn btn-warning btn-xs margine_top_10" ng-click="" >-->
+                                            <!--<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Edit-->
+                                        <!--</button>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--<tr>-->
+                                    <!--<td>-->
+                                        <!--<button type="button" class="btn btn-danger btn-xs margine_top_10" ng-click="deactivateAd(advert.id)" >-->
+                                            <!--<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Deactivate-->
+                                        <!--</button>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--</tbody>-->
+                            <!--</table>-->
+                        <!--</td>-->
                         <td>
                           <table >
                               <tbody>
