@@ -86,11 +86,26 @@ public class MainController {
 
 
     @Secured({"ROLE_USER"})
-    @RequestMapping(value = "/mypets")
-    public List<Pet> getUserInfo(@AuthenticationPrincipal SecUserDetails secUserDetails){
+    @RequestMapping(value = "/text/{adState}", method = RequestMethod.GET, produces = "application/json")
+    public List<Pet> getUserAds(@PathVariable("adState") String adState,
+                                @AuthenticationPrincipal SecUserDetails secUserDetails){
+
         User user = secUserDetails.getUser();
         System.out.println("getUserInfo() user = " + user);
-        List<Pet> pets = petRepository.findByUserEmail(user.getEmail());
+
+        System.out.println("getUserAds()");
+
+
+        Pet.STATE state = Pet.STATE.ACTIVE;
+
+        switch (adState){
+            case "ACTIVE" : state = Pet.STATE.ACTIVE; break;
+            case "WAITING" : state = Pet.STATE.WAITING; break;
+            case "NONACTIVE" : state = Pet.STATE.NONACTIVE; break;
+            default: state = Pet.STATE.ACTIVE; break;
+        }
+
+        List<Pet> pets = petRepository.findByUserEmailAndState(user.getEmail(), state);
         return pets;
     }
 
@@ -137,7 +152,7 @@ public class MainController {
         return breedRepository.findByCategoryName(categoryName);
     }
 
-    @RequestMapping(value = "/text", method = RequestMethod.GET)
+    @RequestMapping(value = "/text", method = RequestMethod.GET, produces = "application/json")
     public String getText(){
         System.out.println("call /text time = " + System.currentTimeMillis());
 

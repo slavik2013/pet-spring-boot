@@ -16,4 +16,6 @@ public interface PetRepository extends MongoRepository<Pet, String> {
     List<Pet> findByCategoryName(String categoryName);
 
     List<Pet> findByCategoryNameAndState(String categoryName, Pet.STATE state);
+
+    List<Pet> findByUserEmailAndState(String userEmail, Pet.STATE state);
 }
