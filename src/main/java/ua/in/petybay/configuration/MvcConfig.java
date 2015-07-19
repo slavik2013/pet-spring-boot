@@ -5,9 +5,7 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomi
 import org.springframework.boot.context.embedded.ErrorPage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -55,13 +53,13 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         };
     }
 
-    @Bean
-    public ValidatingMongoEventListener validatingMongoEventListener() {
-        return new ValidatingMongoEventListener(validator());
-    }
-
-    @Bean
-    public LocalValidatorFactoryBean validator() {
-        return new LocalValidatorFactoryBean();
-    }
+//    @Bean
+//    public ValidatingMongoEventListener validatingMongoEventListener() {
+//        return new ValidatingMongoEventListener(validator());
+//    }
+//
+//    @Bean
+//    public LocalValidatorFactoryBean validator() {
+//        return new LocalValidatorFactoryBean();
+//    }
 }

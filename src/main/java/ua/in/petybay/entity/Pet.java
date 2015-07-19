@@ -63,7 +63,7 @@ public class Pet {
     private List<ImageEntity> imageEntity;
 
     private STATE state;
-
+    
     private String ipAddress;
 
     public Pet() {
