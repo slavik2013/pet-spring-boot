@@ -225,6 +225,11 @@ function getAdsCountByCategoryByPage($scope, $http, category){
             $scope.maxSize++;
         }
 
+        $scope.numPages = $scope.maxSize - ($scope.maxSize % 1);
+
+        if($scope.maxSize > 10)
+            $scope.maxSize = 10;
+
     }).error(function(){
     });
 }
