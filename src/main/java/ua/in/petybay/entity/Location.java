@@ -1,10 +1,15 @@
 package ua.in.petybay.entity;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by slavik on 05.04.15.
  */
 public class Location {
+    @NotNull
     String region;
+
+    @NotNull
     String city;
 
     public Location() {

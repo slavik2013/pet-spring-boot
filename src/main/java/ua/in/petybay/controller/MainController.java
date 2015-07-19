@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,7 @@ import ua.in.petybay.service.PetService;
 import ua.in.petybay.service.image.picasa.PicasaImageSaver;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.InputStream;
 import java.util.List;
 
@@ -54,14 +57,26 @@ public class MainController {
 
     @RequestMapping(value = "/pet", method = RequestMethod.POST, produces = "text/plain")
 //    @Secured({"ROLE_ADMIN"})
-    public String savePet(@RequestBody Pet pet, WebRequest request,
-                          Authentication authentication, HttpServletRequest httpServletRequest){
+    public String savePet(@Valid @RequestBody Pet pet, WebRequest request,
+                          Authentication authentication, HttpServletRequest httpServletRequest,
+                          BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+//            throw new Exception("invalid request params");
+            for (ObjectError objectError: bindingResult.getAllErrors()){
+                System.out.println("objectError = " + objectError);
+            }
+        }
+
         System.out.println("pet : " + pet);
 
         boolean isUserAuthenticated = (authentication != null && authentication.isAuthenticated());
 
         if (isUserAuthenticated){
             pet.setState(Pet.STATE.ACTIVE);
+        } else
+        {
+            pet.setState(Pet.STATE.WAITING);
         }
 
         pet.calculateAndSetPublicationDate();

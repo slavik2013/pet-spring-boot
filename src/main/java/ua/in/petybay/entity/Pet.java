@@ -3,6 +3,8 @@ package ua.in.petybay.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +26,7 @@ public class Pet {
     private String id;
 
 //    @DBRef
+    @NotNull
     private Category category;
 
     private String color;
@@ -31,6 +34,8 @@ public class Pet {
     private String gender;
     private String documents;
     private String parentsTitle;
+    @NotNull
+    @Valid
     private Location location;
     private Price price;
 
@@ -40,16 +45,24 @@ public class Pet {
 //    @DBRef
     private Owner owner;
     private Date publicationDate;
+    @Size(min = 50, max = 4095)
     private String description;
+    @NotNull
+    @Size(min = 5, max = 70)
     private String title;
+
     private int viewCount;
+
     private String active;
 
+    @NotNull
+    @Valid
     private User user;
 
+    @Size(max = 10)
     private List<ImageEntity> imageEntity;
 
-    private STATE state = STATE.WAITING;
+    private STATE state;
 
     private String ipAddress;
 

@@ -1,10 +1,13 @@
 package ua.in.petybay.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
@@ -16,11 +19,18 @@ public class User {
 
     @Id @JsonIgnore
     private String id;
+
+    @NotBlank
+    @Email
     private String email;
 
     @Field("name")
+    @NotBlank
     private String name;
+
     private String phone;
+
+    @Size(max = 100)
     private String skype;
 //    @JsonIgnore
     private String password;

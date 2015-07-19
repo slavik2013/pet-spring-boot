@@ -1,10 +1,14 @@
 package ua.in.petybay.entity;
 
+import javax.validation.constraints.Max;
+
 /**
  * Created by slavik on 05.04.15.
  */
 
 public class Price {
+
+    @Max(1000000000)
     int price;
     String free;
     String currency;
