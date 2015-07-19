@@ -1,7 +1,7 @@
 /**
  * Created by slavik on 04.04.15.
  */
-var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap','ngTable','ngResource','pascalprecht.translate']);
+var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap','ngTable','ngResource','pascalprecht.translate', 'ngCookies']);
 
 controllers.filter('milisecondsToDateTime', [function() {
     return function(seconds) {
@@ -282,24 +282,34 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
 });
 
 
-controllers.controller('petlistController', function ($scope, $routeParams, $http, $location) {
+controllers.controller('petlistController', function ($scope, $routeParams, $http, $location, $cookies) {
 
     $scope.pets = {};
     //getPets($scope, $http, $routeParams.category);
 
-
+    $scope.itemsPerPageSelectList = [5, 10, 20, 40];
 
     $scope.totalItems = 10;
     $scope.currentPage = 1;
     if($routeParams.page)
         $scope.currentPage = $routeParams.page;
     //$scope.maxSize = 2;
-    $scope.itemsPerPage = 2;
+
+
+    if($cookies.get('itemsPerPage'))
+        $scope.itemsPerPage = $cookies.get('itemsPerPage');
+    else
+        $scope.itemsPerPage = 20;
+
+    $cookies.put('itemsPerPage', $scope.itemsPerPage);
 
     getAdsCountByCategoryByPage($scope, $http, $routeParams.category);
 
 
-
+    $scope.itemsPerPageListener = function(){
+        $cookies.put('itemsPerPage', $scope.itemsPerPage);
+        $location.path("/petlist/" + $routeParams.category);
+    };
 
     getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage);
 

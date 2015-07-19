@@ -28,3 +28,9 @@
 
 
 <pagination items-per-page="itemsPerPage" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="true"></pagination>
+
+<select
+        ng-model="itemsPerPage"
+        ng-options="itemsPerPageSelect for itemsPerPageSelect in itemsPerPageSelectList"
+        ng-change="itemsPerPageListener()">
+</select>
