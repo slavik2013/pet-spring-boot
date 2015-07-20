@@ -1,4 +1,4 @@
-package ua.in.petybay.security;
+package ua.in.petybay.EventListeners;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import ua.in.petybay.configuration.GeneralConfigs;
 import ua.in.petybay.entity.User;
+import ua.in.petybay.Events.OnRegistrationCompleteEvent;
 import ua.in.petybay.service.IUserService;
 
 import java.util.UUID;

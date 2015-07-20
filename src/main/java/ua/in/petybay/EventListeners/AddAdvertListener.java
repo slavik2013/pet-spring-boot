@@ -25,10 +25,11 @@ public class AddAdvertListener implements ApplicationListener<OnAddAdvertComplet
 
     @Override
     public void onApplicationEvent(OnAddAdvertCompleteEvent event) {
-        this.confirmRegistration(event);
+        this.confirmAddAdvert(event);
     }
 
-    private void confirmRegistration(OnAddAdvertCompleteEvent event) {
+    private void confirmAddAdvert(OnAddAdvertCompleteEvent event) {
+        System.out.println("confirmAddAdvert() before time = " + System.currentTimeMillis());
         Pet advert = event.getAdvert();
         String token = UUID.randomUUID().toString();
         advertService.createVerificationToken(advert, token);
@@ -43,5 +44,6 @@ public class AddAdvertListener implements ApplicationListener<OnAddAdvertComplet
         email.setText(GeneralConfigs.HOST + confirmationUrl);
 
         mailSender.send(email);
+        System.out.println("confirmAddAdvert() after time = " + System.currentTimeMillis());
     }
 }

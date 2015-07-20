@@ -450,12 +450,12 @@ controllers.controller('addadvertController', function ($scope, $http, $location
         };
 
         $http(req).success(function(data){
-
+            $location.path("/adsuccess");
         }).error(function(){
-
+            $scope.addAdError = "sorry, some error occur, please try again"
         });
 
-        $location.path("/adsuccess");
+
     };
 
     $scope.breeds = [];

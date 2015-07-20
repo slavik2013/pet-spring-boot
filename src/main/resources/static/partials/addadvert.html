@@ -5,6 +5,13 @@
     </div>
 
     <hr/>
+
+    <div class="alert alert-danger" role="alert" ng-show="addAdError">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{addAdError}}
+    </div>
+
 <form class="form-horizontal" ng-submit="submit()">
     <div class="form-group">
         <label class="control-label col-xs-3" for="inputTitle">Title</label>

@@ -56,16 +56,14 @@ public class MainController {
 
 
     @RequestMapping(value = "/pet", method = RequestMethod.POST, produces = "text/plain")
-//    @Secured({"ROLE_ADMIN"})
-    public String savePet(@Valid @RequestBody Pet pet, WebRequest request,
-                          Authentication authentication, HttpServletRequest httpServletRequest,
-                          BindingResult bindingResult) {
+    public String savePet(@Valid @RequestBody Pet pet, BindingResult bindingResult, WebRequest request,
+                          Authentication authentication, HttpServletRequest httpServletRequest) throws Exception{
 
         if (bindingResult.hasErrors()) {
-//            throw new Exception("invalid request params");
             for (ObjectError objectError: bindingResult.getAllErrors()){
                 System.out.println("objectError = " + objectError);
             }
+            throw new Exception("invalid request params");
         }
 
         System.out.println("pet : " + pet);
@@ -95,7 +93,9 @@ public class MainController {
         if (!isUserAuthenticated) {
             System.out.println("savePet() send email to confirm");
             String appUrl = request.getContextPath();
+            System.out.println("savePet() before publish event time = " + System.currentTimeMillis());
             eventPublisher.publishEvent(new OnAddAdvertCompleteEvent(pet, appUrl));
+            System.out.println("savePet() after publish event time = " + System.currentTimeMillis());
         }
 
         return "all is ok";

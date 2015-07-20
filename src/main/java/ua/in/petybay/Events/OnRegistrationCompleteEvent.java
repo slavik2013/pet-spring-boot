@@ -1,4 +1,4 @@
-package ua.in.petybay.security;
+package ua.in.petybay.Events;
 
 import org.springframework.context.ApplicationEvent;
 import ua.in.petybay.entity.User;

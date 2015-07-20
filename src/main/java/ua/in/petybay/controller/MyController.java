@@ -22,7 +22,7 @@ import ua.in.petybay.entity.AdvertVerificationToken;
 import ua.in.petybay.entity.Pet;
 import ua.in.petybay.entity.User;
 import ua.in.petybay.entity.VerificationToken;
-import ua.in.petybay.security.OnRegistrationCompleteEvent;
+import ua.in.petybay.Events.OnRegistrationCompleteEvent;
 import ua.in.petybay.security.PasswordEncoderService;
 import ua.in.petybay.security.SecUserDetails;
 import ua.in.petybay.security.SecUserDetailsService;
