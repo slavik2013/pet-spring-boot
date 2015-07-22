@@ -1,0 +1,137 @@
+    <div class="row">
+
+        <div class="col-sm-9 border nopadding_left_right nomargin_left_right padding_bottom_20">
+
+            <div class="ad_head_block padding_top_bottom_15 margin_left_20">
+                <h3 class="advert_head_title">{{advertSingle.title}}</h3>
+                <div class="margine_top_10">
+                    <span class="map_small vertical_align_middle display_inline_block"></span>
+                    <span class="map_small_text color_black margin_left_6 grey_border_right padding_right_10">{{advertSingle.location.city}}, {{advertSingle.location.region}}</span>
+                    <span class="head_title_added_small_text margin_left_10">
+                        {{ 'ADDED' | translate }}: {{ 'IN' | translate }} {{advertSingle.publicationDate | milisecondsToDateTime | date:'HH:mm , dd/MM/yyyy'}}, {{ 'NUMBER' | translate }}: {{advertSingle.id}} </span>
+                </div>
+                <div class="ad_manipulation_buttons margine_top_15">
+
+                    <button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">
+                        <span class="manipulation_buttons_icon_top vertical_align_middle display_inline_block"></span>
+                        <span class="margin_left_6"><a href="">Разместить в топ</a></span>
+                    </button>
+
+                    <button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">
+                        <span class="manipulation_buttons_icon_make_urgently vertical_align_middle display_inline_block"></span>
+                        <span class="margin_left_6"><a href="">Сделать срочным</a></span>
+
+                    </button>
+                    <button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">
+                        <span class="manipulation_buttons_icon_select vertical_align_middle display_inline_block"></span>
+                        <span class="margin_left_6"><a href="">Выделить</a></span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">
+                        <span class="manipulation_buttons_icon_raise vertical_align_middle display_inline_block"></span>
+                        <span class="margin_left_6"><a href="">Поднять</a></span>
+                    </button>
+                </div>
+            </div>
+            <div class="advert_main_container">
+
+            <div class="thumbnail">
+                <!--<img src="http://img02.olx.ua/images_slandocomua/206477299_2_1000x700_zamechatelnye-schenochki-yorkshirskogo-terera-fotografii_rev001.jpg">-->
+                 <!--<img src="http://gestionbroker.ru/mobile_landing/images/screenshots/plane.jpg" style="max-height: 400px">-->
+
+                <img ng-src={{advertSingle.imageEntity[0].htmlLink}}>
+            </div>
+                <div class="margin_left_20 margin_bottom_20">
+                    {{advertSingle.description}}
+                </div>
+            <div class="thumbnail" ng-repeat="singleImageEntity in advertSingle.imageEntity.slice(1,advertSingle.imageEntity.length)">
+                <!--<img src="http://img02.olx.ua/images_slandocomua/206477299_2_1000x700_zamechatelnye-schenochki-yorkshirskogo-terera-fotografii_rev001.jpg">-->
+                <!--<img src="http://gestionbroker.ru/mobile_landing/images/screenshots/plane.jpg">-->
+                <img ng-src={{singleImageEntity.htmlLink}}>
+            </div>
+                <div class="margin_bottom_10">
+                </div>
+                <div>
+                    {{ 'VIEWS' | translate }}: {{advertSingle.viewCount}}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-3">
+
+            <div class="price">
+                <strong class="price_text">{{advertSingle.price.price}} {{advertSingle.price.currency}}</strong>
+            </div>
+
+            <!--<h4 class="color_black_52 text_center font_size_16">Связаться с продавцом:</h4>-->
+
+            <div class="ad_author_info_block border_radius_3">
+                <div class="write_to_author">
+                    <button type="button" class="btn btn-primary btn-lg col-xs-12 noborder write_to_author">
+                        <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ 'WRITE_TO_AUTHOR' | translate }}
+                    </button>
+
+                </div>
+
+                <div class="margin_bottom_10">
+                    <span class="phone vertical_align_middle display_inline_block"></span>
+                    <strong class="font_size_18 color_black font_weight_normal margin_left_10">{{advertSingle.user.phone}}</strong>
+                </div>
+
+                <div>
+                    <span class="skype vertical_align_middle display_inline_block"></span>
+                    <strong class="font_size_18 color_black font_weight_normal margin_left_10">{{advertSingle.user.skype}}</strong>
+                </div>
+            </div>
+
+            <div class="ad_map_block border_radius_3">
+                <div class="row">
+                    <div class="col-xs-1 col-sm-2">
+                        <span class="map vertical_align_middle display_inline_block"></span>
+                    </div>
+
+                    <div class="col-xs-11 col-sm-10 font_size_12 block">
+                        {{advertSingle.location.city}}, {{advertSingle.location.region}}
+                        <br/>
+                        <span class=""><a href="">{{ 'SHOW_ON_MAP' | translate }}</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ad_author_data border_radius_3">
+                <div class="row">
+                    <div class="col-xs-1 col-sm-2">
+                        <span class="user vertical_align_middle display_inline_block"></span>
+                    </div>
+
+                    <div class="col-xs-11 col-sm-10 font_size_16 block">
+                        {{advertSingle.user.name}}
+                        <br/>
+                        <span class="font_size_12">на PetyBay с апр. 2010</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ad_activities_list border_radius_3">
+                <div class="row">
+                    <div class="col-xs-1 col-sm-2">
+                        <span class="flag vertical_align_middle display_inline_block"></span>
+                    </div>
+
+                    <div class="col-xs-11 col-sm-10 block">
+                        <span class="font_size_12"><a href="">{{ 'TO_FAVORITES' | translate }}</a></span>
+                        <br/>
+                        <span class="font_size_12"><a href="">{{ 'CHANGE' | translate }}</a></span>
+                        <br/>
+                        <span class="font_size_12"><a href="">{{ 'COMPLAINT' | translate }}</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->

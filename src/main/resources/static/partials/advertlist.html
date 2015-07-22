@@ -1,0 +1,36 @@
+<div class="yellow_background margin_bottom yellow_border padding_all">
+    <form class="form-inline" role="form">
+        <input type="email" class="form-control" id="inputEmail" placeholder="Keyword">
+        <input type="password" class="form-control" id="inputPassword" placeholder="Location">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+<div class="margin_bottom_10" ng-repeat="advertEntity in adverts">
+    <div class="row" >
+        <div class="col-lg-1">
+           {{advertEntity.publicationDate | milisecondsToDateTime | date:'HH:mm dd MMMM'}}
+        </div>
+        <div class="col-lg-3">
+            <img ng-src={{advertEntity.imageEntity[0].htmlLink}} height="100"/>
+        </div>
+        <div class="col-lg-6">
+            <a href="#/advert/{{advertEntity.id}}">{{advertEntity.title}}</a>
+            <p></p>
+            <p>{{advertEntity.location.region}}</p>
+        </div>
+        <div class="col-lg-1">
+            <strong>{{advertEntity.price.price}} {{advertEntity.price.currency}}</strong>
+        </div>
+
+   </div>
+</div>
+
+
+<pagination items-per-page="itemsPerPage" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="true"></pagination>
+<pre>Page: {{currentPage}} / {{numPages}}</pre>
+<select
+        ng-model="itemsPerPage"
+        ng-options="itemsPerPageSelect for itemsPerPageSelect in itemsPerPageSelectList"
+        ng-change="itemsPerPageListener()">
+</select>
