@@ -1,10 +1,12 @@
 package ua.in.petybay.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,8 +15,8 @@ import java.util.List;
 /**
  * Created by slavik on 31.03.15.
  */
-@Document(collection="pet")
-public class Pet {
+@Document(collection="advert")
+public class Advert {
 
     public static enum STATE{
         ACTIVE,
@@ -25,25 +27,15 @@ public class Pet {
     @Id
     private String id;
 
-//    @DBRef
+    @DBRef
     @NotNull
-    private Category category;
+    private List<Category> categories;
 
-    private String color;
-    private Date birthday;
-    private String gender;
-    private String documents;
-    private String parentsTitle;
     @NotNull
     @Valid
     private Location location;
     private Price price;
 
-//    @DBRef
-    private Breed breed;
-
-//    @DBRef
-    private Owner owner;
     private Date publicationDate;
     @Size(min = 50, max = 4095)
     private String description;
@@ -66,57 +58,17 @@ public class Pet {
 
     private String ipAddress;
 
-    public Pet() {
+    public Advert() {
     }
 
-    public Pet(String id, Category category, String color, Date birthday, String gender, String documents, String parentsTitle, Location location, Price price, Breed breed, Owner owner, Date publicationDate, String description, String title, int viewCount, String active, User user, List<ImageEntity> imageEntity, STATE state) {
-        this.id = id;
-        this.category = category;
-        this.color = color;
-        this.birthday = birthday;
-        this.gender = gender;
-        this.documents = documents;
-        this.parentsTitle = parentsTitle;
-        this.location = location;
-        this.price = price;
-        this.breed = breed;
-        this.owner = owner;
-        this.publicationDate = publicationDate;
-        this.description = description;
-        this.title = title;
-        this.viewCount = viewCount;
-        this.active = active;
-        this.user = user;
-        this.imageEntity = imageEntity;
-        this.state = state;
-    }
+
 
     public String getId() {
         return id;
     }
 
-    public Category getCategory() {
-        return category;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public String getDocuments() {
-        return documents;
-    }
-
-    public String getParentsTitle() {
-        return parentsTitle;
+    public List<Category> getCategories() {
+        return categories;
     }
 
     public Location getLocation() {
@@ -125,14 +77,6 @@ public class Pet {
 
     public Price getPrice() {
         return price;
-    }
-
-    public Breed getBreed() {
-        return breed;
-    }
-
-    public Owner getOwner() {
-        return owner;
     }
 
     public Date getPublicationDate() {
@@ -155,48 +99,20 @@ public class Pet {
         return active;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
     public void setPublicationDate(Date publicationDate) {
         this.publicationDate = publicationDate;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setDocuments(String documents) {
-        this.documents = documents;
-    }
-
-    public void setParentsTitle(String parentsTitle) {
-        this.parentsTitle = parentsTitle;
-    }
-
     public void setPrice(Price price) {
         this.price = price;
     }
 
-    public void setBreed(Breed breed) {
-        this.breed = breed;
-    }
-
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public void setOwner(Owner owner) {
-        this.owner = owner;
     }
 
     public void setDescription(String description) {
@@ -249,18 +165,11 @@ public class Pet {
 
     @Override
     public String toString() {
-        return "Pet{" +
+        return "Advert{" +
                 "id='" + id + '\'' +
-                ", category=" + category +
-                ", color='" + color + '\'' +
-                ", birthday=" + birthday +
-                ", gender='" + gender + '\'' +
-                ", documents='" + documents + '\'' +
-                ", parentsTitle='" + parentsTitle + '\'' +
+                ", category=" + categories +
                 ", location=" + location +
                 ", price=" + price +
-                ", breed=" + breed +
-                ", owner=" + owner +
                 ", publicationDate=" + publicationDate +
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
@@ -278,95 +187,60 @@ public class Pet {
     }
 
     public static Builder getBuilder(){
-        return new Pet().new Builder();
+        return new Advert().new Builder();
     }
 
     public class Builder{
 
         public Builder(){}
 
-        public Builder category(Category category) {
-            Pet.this.category = category;
-            return this;
-        }
-
-        public Builder color(String color) {
-            Pet.this.color = color;
-            return this;
-        }
-
-        public Builder birthday(Date birthday) {
-            Pet.this.birthday = birthday;
-            return this;
-        }
-
-        public Builder gender(String gender) {
-            Pet.this.gender = gender;
-            return this;
-        }
-
-        public Builder documents(String documents) {
-            Pet.this.documents = documents;
-            return this;
-        }
-
-        public Builder parentsTitle(String parentsTitle) {
-            Pet.this.parentsTitle = parentsTitle;
+        public Builder category(List<Category> categories) {
+            Advert.this.categories = categories;
             return this;
         }
 
         public Builder location(Location location) {
-            Pet.this.location = location;
+            Advert.this.location = location;
             return this;
         }
 
         public Builder price(Price price) {
-            Pet.this.price = price;
-            return this;
-        }
-
-        public Builder breed(Breed breed) {
-            Pet.this.breed = breed;
-            return this;
-        }
-
-        public Builder owner(Owner owner) {
-            Pet.this.owner = owner;
+            Advert.this.price = price;
             return this;
         }
 
         public Builder publicationDate(Date publicationDate) {
-            Pet.this.publicationDate = publicationDate;
+            Advert.this.publicationDate = publicationDate;
             return this;
         }
 
         public Builder description(String description) {
-            Pet.this.description = description;
+            Advert.this.description = description;
             return this;
         }
 
         public Builder title(String title) {
-            Pet.this.title = title;
+            Advert.this.title = title;
             return this;
         }
 
         public Builder viewCount(int viewCount) {
-            Pet.this.viewCount = viewCount;
+            Advert.this.viewCount = viewCount;
             return this;
         }
 
         public Builder active(String active) {
-            Pet.this.active = active;
+            Advert.this.active = active;
             return this;
         }
 
         public Builder imageEntity(List<ImageEntity> imageEntity) {
-            Pet.this.imageEntity = imageEntity;
+            Advert.this.imageEntity = imageEntity;
             return this;
         }
 
-        public Pet build(){
-            return Pet.this;
+        public Advert build(){
+            return Advert.this;
         }
 
     }

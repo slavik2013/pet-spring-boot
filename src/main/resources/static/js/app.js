@@ -34,20 +34,20 @@ app.config(['$routeProvider',
                 templateUrl: 'partials/addadvert.html',
                 controller: 'addadvertController'
             }).
-            when('/petlist/:category', {
-                templateUrl: 'partials/petlist.html',
-                controller: 'petlistController'
+            when('/advertlist/:category', {
+                templateUrl: 'partials/advertlist.html',
+                controller: 'advertlistController'
             }).
-            when('/petlist/:category/page/:page', {
-                templateUrl: 'partials/petlist.html',
-                controller: 'petlistController'
+            when('/advertlist/:category/page/:page', {
+                templateUrl: 'partials/advertlist.html',
+                controller: 'advertlistController'
             }).
             when('/adsuccess', {
                 templateUrl: 'partials/adsuccess.html'
             }).
-            when('/pet/:petId', {
-                templateUrl: 'partials/pet.html',
-                controller: 'petController'
+            when('/advert/:advertId', {
+                templateUrl: 'partials/advert.html',
+                controller: 'advertController'
             }).
             when('/login', {
                 templateUrl: 'partials/login.html',

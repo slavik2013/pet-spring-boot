@@ -17,7 +17,7 @@ public class AdvertVerificationToken {
     private String token;
 
     @DBRef
-    private Pet advert;
+    private Advert advert;
 
     private Date expiryDate;
 
@@ -26,7 +26,7 @@ public class AdvertVerificationToken {
     public AdvertVerificationToken() {
     }
 
-    public AdvertVerificationToken(String token, Pet advert) {
+    public AdvertVerificationToken(String token, Advert advert) {
         this.token = token;
         this.advert = advert;
     }
@@ -47,11 +47,11 @@ public class AdvertVerificationToken {
         this.token = token;
     }
 
-    public Pet getPet() {
+    public Advert getAdvert() {
         return advert;
     }
 
-    public void setPet(Pet advert) {
+    public void setAdvert(Advert advert) {
         this.advert = advert;
     }
 

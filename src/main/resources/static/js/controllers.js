@@ -123,23 +123,19 @@ controllers.directive('ngThumb', function($window) {
     };
 });
 
-
-var categoriesCache = null;
-
-function getCategories($scope, $http){
+function getCategoriesList($scope, $http){
     var req = {
         method: 'GET',
         url: 'api/category',
         headers: {
             'Content-Type': undefined
         }
-    }
+    };
 
     $http(req).success(function(data){
-        $scope.categories = data;
-        categoriesCache = data;
+        $scope.categoriesList = data;
     }).error(function(){
-        //alert('error');
+
     });
 }
 
@@ -150,7 +146,7 @@ function getUser($scope, $http){
         headers: {
             'Content-Type': undefined
         }
-    }
+    };
 
     $http(req).success(function(data){
         $scope.authenticatedUser = data;
@@ -162,14 +158,14 @@ function getUser($scope, $http){
 //function getPets($scope, $http){
 //    var req = {
 //        method: 'GET',
-//        url: 'api/pet',
+//        url: 'api/advert',
 //        headers: {
 //            'Content-Type': undefined
 //        }
 //    }
 //
 //    $http(req).success(function(data){
-//        $scope.pets = data;
+//        $scope.adverts = data;
 //    }).error(function(){
 //        //alert('error');
 //    });
@@ -178,14 +174,14 @@ function getUser($scope, $http){
 function getPets($scope, $http, category){
     var req = {
         method: 'GET',
-        url: 'api/pet/category/'+category,
+        url: 'api/advert/category/'+category,
         headers: {
             'Content-Type': undefined
         }
-    }
+    };
 
     $http(req).success(function(data){
-        $scope.pets = data;
+        $scope.adverts = data;
     }).error(function(){
         //alert('error');
     });
@@ -194,29 +190,29 @@ function getPets($scope, $http, category){
 function getAdsByCategoryByPage($scope, $http, category, page, itemsPerPage){
     var req = {
         method: 'GET',
-        url: 'api/pet/category/'+category+'/page/' + page + '/itemsperpage/' + itemsPerPage,
+        url: 'api/advert/category/'+category+'/page/' + page + '/itemsperpage/' + itemsPerPage,
         headers: {
             'Content-Type': undefined
         }
     };
 
     $http(req).success(function(data){
-        $scope.pets = data;
+        $scope.adverts = data;
     }).error(function(){
     });
 }
 
 function getAdsCountByCategoryByPage($scope, $http, category){
-    var req = {
+    var requestCount = {
         method: 'GET',
-        url: 'api/pet/category/'+category+'/count',
+        url: 'api/advert/category/'+category+'/count',
         headers: {
             'Content-Type': undefined
         },
         cache: true
     };
 
-    $http(req).success(function(data){
+    $http(requestCount).success(function(data){
         $scope.totalItems = data;
 
         $scope.maxSize = data / $scope.itemsPerPage;
@@ -231,6 +227,7 @@ function getAdsCountByCategoryByPage($scope, $http, category){
             $scope.maxSize = 10;
 
     }).error(function(){
+
     });
 }
 
@@ -279,17 +276,26 @@ controllers.controller('loginUserController', function ($scope, $http, $translat
 controllers.controller('mainController', function ($scope, $routeParams, $http, $location) {
 
     //if(categoriesCache == null)
-    getCategories($scope, $http);
+    getCategoriesList($scope, $http);
     //getUser($scope, $http);
     //$scope.authenticatedUser = $cacheFactory('userCache').get('user');
     //alert(JSON.stringify($scope.authenticatedUser));
+    $scope.currentCategory = {};
+
+    $scope.changeCategory = function(category){
+
+        if ($scope.currentCategory == category)
+            $scope.currentCategory = undefined;
+        else
+            $scope.currentCategory = category;
+    }
 
 });
 
 
-controllers.controller('petlistController', function ($scope, $routeParams, $http, $location, $cookies) {
+controllers.controller('advertlistController', function ($scope, $routeParams, $http, $location, $cookies) {
 
-    $scope.pets = {};
+    $scope.adverts = {};
     //getPets($scope, $http, $routeParams.category);
 
     $scope.itemsPerPageSelectList = [5, 10, 20, 40];
@@ -313,7 +319,7 @@ controllers.controller('petlistController', function ($scope, $routeParams, $htt
 
     $scope.itemsPerPageListener = function(){
         $cookies.put('itemsPerPage', $scope.itemsPerPage);
-        $location.path("/petlist/" + $routeParams.category);
+        $location.path("/advertlist/" + $routeParams.category);
     };
 
     getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage);
@@ -323,7 +329,7 @@ controllers.controller('petlistController', function ($scope, $routeParams, $htt
     };
 
     $scope.pageChanged = function() {
-        $location.path("/petlist/" + $routeParams.category + "/page/" + $scope.currentPage);
+        $location.path("/advertlist/" + $routeParams.category + "/page/" + $scope.currentPage);
         //getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage)
     };
 
@@ -406,14 +412,14 @@ controllers.controller('addadvertController', function ($scope, $http, $location
     //    return item.file.size <= 10 * 1024 * 1024; // 10 MiB to bytes
     //}});
 
-    $scope.pet = {};
+    $scope.advert = {};
 
     $scope.images = {};
 
     /*if(!categoriesCache)
         $scope.categories = categoriesCache;
     else*/
-        getCategories($scope, $http);
+        getCategoriesList($scope, $http);
 
     $scope.deleteImage = function(item) {
 
@@ -421,7 +427,7 @@ controllers.controller('addadvertController', function ($scope, $http, $location
         var req = {
             method: 'GET',
             url: 'api/deleteimage/' + imageId
-        }
+        };
 
         $http(req).success(function(data){
 
@@ -435,15 +441,21 @@ controllers.controller('addadvertController', function ($scope, $http, $location
 
     $scope.submit = function() {
 
-        $scope.pet.imageEntity = [];
+        $scope.advert.imageEntity = [];
+
+        $scope.advert.categories = [];
+
+        $scope.advert.categories.push($scope.advert.category);
+
+        delete $scope.advert.category;
 
         for (var imageEntityId in $scope.images){
-            $scope.pet.imageEntity.push($scope.images[imageEntityId]);
+            $scope.advert.imageEntity.push($scope.images[imageEntityId]);
         }
         var req = {
             method: 'POST',
-            url: 'api/pet',
-            data: $scope.pet,
+            url: 'api/advert',
+            data: $scope.advert,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -458,29 +470,6 @@ controllers.controller('addadvertController', function ($scope, $http, $location
 
     };
 
-    $scope.breeds = [];
-
-    $scope.getBreeds = function(){
-
-        $scope.pet.price.currency = 'грн';
-
-        //if(!$scope.breeds) {
-            var req = {
-                method: 'GET',
-                url:"api/breeds/" + $scope.pet.category.name,
-                headers: {
-                    'Content-Type': undefined
-                }
-            };
-            $http(req).success(function (data) {
-/*                var  categoryBreed = {};
-                categoryBreed[$scope.pet.category.name] = data;
-                $scope.breeds.push(categoryBreed);*/
-                $scope.breeds = data;
-            });
-        //}
-    }
-
 });
 
 controllers.controller('dateController', function ($scope){
@@ -488,25 +477,25 @@ controllers.controller('dateController', function ($scope){
 });
 
 
-function getPetById($scope, $http, petId){
+function getPetById($scope, $http, advertId){
     var req = {
         method: 'GET',
-        url: 'api/pet/' + petId,
+        url: 'api/advert/' + advertId,
         headers: {
             'Content-Type': undefined
         }
     }
 
     $http(req).success(function(data){
-        $scope.petSingle = data;
+        $scope.advertSingle = data;
     }).error(function(){
         //alert('error');
     });
 }
 
-controllers.controller('petController', function ($scope, $routeParams, $http){
-    //alert("petId = " + $routeParams.petId);
-    getPetById($scope, $http, $routeParams.petId);
+controllers.controller('advertController', function ($scope, $routeParams, $http){
+    //alert("advertId = " + $routeParams.advertId);
+    getPetById($scope, $http, $routeParams.advertId);
 });
 
 
@@ -580,7 +569,7 @@ function getMyads($scope, $http, adState){
 
     var req = {
         method: 'GET',
-        url:'api/text/' + adState,
+        url:'api/user/adverts/' + adState,
         headers: {
             'Content-Type': undefined
         }
@@ -638,7 +627,7 @@ function deleteItemFromAdverts(adverts, advertId){
 }
 
 function viewAdvert($location, advertId){
-    $location.path("/pet/" + advertId);
+    $location.path("/advert/" + advertId);
 }
 
 controllers.controller('accountController', function ($scope, $routeParams, $http, $location, NgTableParams, $resource){

@@ -14,15 +14,14 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import ua.in.petybay.Events.OnRegistrationCompleteEvent;
 import ua.in.petybay.dao.AdvertVerificationTokenRepository;
-import ua.in.petybay.dao.PetRepository;
 import ua.in.petybay.dao.UserRepository;
 import ua.in.petybay.dao.VerificationTokenRepository;
+import ua.in.petybay.entity.Advert;
 import ua.in.petybay.entity.AdvertVerificationToken;
-import ua.in.petybay.entity.Pet;
 import ua.in.petybay.entity.User;
 import ua.in.petybay.entity.VerificationToken;
-import ua.in.petybay.Events.OnRegistrationCompleteEvent;
 import ua.in.petybay.security.PasswordEncoderService;
 import ua.in.petybay.security.SecUserDetails;
 import ua.in.petybay.security.SecUserDetailsService;
@@ -42,17 +41,28 @@ public class MyController {
     @Autowired
     UserRepository userRepository;
 
-
     @Autowired
     ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    private IUserService service;
+
+    @Autowired
+    private IAdvertService advertService;
+
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
+
+    @Autowired
+    private AdvertVerificationTokenRepository advertVerificationTokenRepository;
+
+    @Autowired
+    SecUserDetailsService secUserDetailsService;
 
 //    @InitBinder
 //    public void initBinder(WebDataBinder binder){
 //        binder.setDisallowedFields(new String[]{"passwordconfirm"});
 //    }
-
-    @Autowired
-    SecUserDetailsService secUserDetailsService;
 
 //    @Autowired(required = false)
 //    @Qualifier("authenticationManager")
@@ -138,21 +148,6 @@ public class MyController {
         return "user with this email already exist";
     }
 
-    @Autowired
-    private IUserService service;
-
-    @Autowired
-    private IAdvertService advertService;
-
-    @Autowired
-    private VerificationTokenRepository verificationTokenRepository;
-
-    @Autowired
-    private PetRepository petRepository;
-
-    @Autowired
-    private AdvertVerificationTokenRepository advertVerificationTokenRepository;
-
     @RequestMapping(value = "/regitrationConfirm", method = RequestMethod.GET)
     public String confirmRegistration(@RequestParam("token") String token) {
 
@@ -188,12 +183,12 @@ public class MyController {
             return "verificationToken is null";
         }
 
-        Pet advert = verificationToken.getPet();
+        Advert advert = verificationToken.getAdvert();
 
-        if (Pet.STATE.WAITING.equals(advert.getState())) {
-            advert.setState(Pet.STATE.ACTIVE);
+        if (Advert.STATE.WAITING.equals(advert.getState())) {
+            advert.setState(Advert.STATE.ACTIVE);
 
-            petRepository.save(advert);
+            advertService.save(advert);
         }
         verificationToken.setVerified(true);
         advertVerificationTokenRepository.save(verificationToken);
@@ -208,12 +203,12 @@ public class MyController {
 
         User user = secUserDetails.getUser();
 
-       Pet advert = petRepository.findOne(adId);
+        Advert advert = advertService.findOne(adId);
         User advertUser = advert.getUser();
 
         if (advertUser.getEmail().equals(user.getEmail())) {
-            advert.setState(Pet.STATE.ACTIVE);
-            petRepository.save(advert);
+            advert.setState(Advert.STATE.ACTIVE);
+            advertService.save(advert);
         }
       return "ad confirmed";
     }
@@ -225,12 +220,12 @@ public class MyController {
 
         User user = secUserDetails.getUser();
 
-        Pet advert = petRepository.findOne(adId);
+        Advert advert = advertService.findOne(adId);
         User advertUser = advert.getUser();
 
         if (advertUser.getEmail().equals(user.getEmail())) {
-            advert.setState(Pet.STATE.NONACTIVE);
-            petRepository.save(advert);
+            advert.setState(Advert.STATE.NONACTIVE);
+            advertService.save(advert);
         }
         return "ad deactivated";
     }

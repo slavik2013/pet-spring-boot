@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import ua.in.petybay.Events.OnAddAdvertCompleteEvent;
 import ua.in.petybay.configuration.GeneralConfigs;
-import ua.in.petybay.entity.Pet;
+import ua.in.petybay.entity.Advert;
 import ua.in.petybay.service.IAdvertService;
 
 import java.util.UUID;
@@ -30,7 +30,7 @@ public class AddAdvertListener implements ApplicationListener<OnAddAdvertComplet
 
     private void confirmAddAdvert(OnAddAdvertCompleteEvent event) {
         System.out.println("confirmAddAdvert() before time = " + System.currentTimeMillis());
-        Pet advert = event.getAdvert();
+        Advert advert = event.getAdvert();
         String token = UUID.randomUUID().toString();
         advertService.createVerificationToken(advert, token);
 

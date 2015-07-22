@@ -2,8 +2,6 @@ package ua.in.petybay.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -13,18 +11,19 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
-import ua.in.petybay.Events.OnAddAdvertCompleteEvent;
-import ua.in.petybay.dao.BreedRepository;
 import ua.in.petybay.dao.CategoryRepository;
-import ua.in.petybay.dao.PetRepository;
-import ua.in.petybay.entity.*;
+import ua.in.petybay.entity.Advert;
+import ua.in.petybay.entity.Category;
+import ua.in.petybay.entity.ImageEntity;
+import ua.in.petybay.entity.User;
 import ua.in.petybay.security.SecUserDetails;
-import ua.in.petybay.service.PetService;
+import ua.in.petybay.service.IAdvertService;
 import ua.in.petybay.service.image.picasa.PicasaImageSaver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,17 +35,10 @@ import java.util.List;
 public class MainController {
 
     @Autowired
-    private PetRepository petRepository;
-//    @Autowired
-//    private OwnerRepository ownerRepository;
-    @Autowired
-    private BreedRepository breedRepository;
-    @Autowired
     private CategoryRepository categoryRepository;
 
-
     @Autowired
-    private PetService petService;
+    private IAdvertService advertService;
 
     @Autowired
     private PicasaImageSaver picasaImageSaver;
@@ -55,8 +47,8 @@ public class MainController {
     ApplicationEventPublisher eventPublisher;
 
 
-    @RequestMapping(value = "/pet", method = RequestMethod.POST, produces = "text/plain")
-    public String savePet(@Valid @RequestBody Pet pet, BindingResult bindingResult, WebRequest request,
+    @RequestMapping(value = "/advert", method = RequestMethod.POST, produces = "text/plain")
+    public String saveAdvert(@Valid @RequestBody Advert advert, BindingResult bindingResult, WebRequest request,
                           Authentication authentication, HttpServletRequest httpServletRequest) throws Exception{
 
         if (bindingResult.hasErrors()) {
@@ -66,18 +58,18 @@ public class MainController {
             throw new Exception("invalid request params");
         }
 
-        System.out.println("pet : " + pet);
+        System.out.println("advert : " + advert);
 
         boolean isUserAuthenticated = (authentication != null && authentication.isAuthenticated());
 
         if (isUserAuthenticated){
-            pet.setState(Pet.STATE.ACTIVE);
+            advert.setState(Advert.STATE.ACTIVE);
         } else
         {
-            pet.setState(Pet.STATE.WAITING);
+            advert.setState(Advert.STATE.WAITING);
         }
 
-        pet.calculateAndSetPublicationDate();
+        advert.calculateAndSetPublicationDate();
 
         String ipAddress = httpServletRequest.getHeader("X-FORWARDED-FOR");
         if (ipAddress == null) {
@@ -85,26 +77,42 @@ public class MainController {
         }
         System.out.println("ipAddress is " + ipAddress);
 
-        pet.setIpAddress(ipAddress);
-        petService.save(pet);
+        advert.setIpAddress(ipAddress);
 
-        System.out.println("savePet() authentication = " + authentication);
+        List<Category> categories = advertService.addCategoriesToNewAdvert(advert);
+        advertService.save(advert);
+        for (Category category : categories){
+            if (isUserAuthenticated) {
+                category.setCountActive(category.getCountActive() + 1);
+            } else {
+                category.setCountWaiting(category.getCountWaiting() + 1);
+            }
+            categoryRepository.save(category);
+        }
+
+        System.out.println("saveAdvert() authentication = " + authentication);
 
         if (!isUserAuthenticated) {
-            System.out.println("savePet() send email to confirm");
+            System.out.println("saveAdvert() send email to confirm");
             String appUrl = request.getContextPath();
-            System.out.println("savePet() before publish event time = " + System.currentTimeMillis());
-            eventPublisher.publishEvent(new OnAddAdvertCompleteEvent(pet, appUrl));
-            System.out.println("savePet() after publish event time = " + System.currentTimeMillis());
+            System.out.println("saveAdvert() before publish event time = " + System.currentTimeMillis());
+//            eventPublisher.publishEvent(new OnAddAdvertCompleteEvent(advert, appUrl));
+            System.out.println("saveAdvert() after publish event time = " + System.currentTimeMillis());
         }
 
         return "all is ok";
     }
 
 
+    /* get user adverts by state. The path must be like /user/adverts/{adState} but because of error
+      which appears in angularJS when $http(request) called, was decided to left /text/{adState}. In
+     future investigation of this problem must be done and fixed.
+     I found out the problem. Such behaviour was because of installed AdBlock plugin. It filters all requests
+     which have 'ad' keyword or similar.
+    */
     @Secured({"ROLE_USER"})
-    @RequestMapping(value = "/text/{adState}", method = RequestMethod.GET, produces = "application/json")
-    public List<Pet> getUserAds(@PathVariable("adState") String adState,
+    @RequestMapping(value = "/user/adverts/{adState}", method = RequestMethod.GET, produces = "application/json")
+    public List<Advert> getUserAds(@PathVariable("adState") String adState,
                                 @AuthenticationPrincipal SecUserDetails secUserDetails){
 
         User user = secUserDetails.getUser();
@@ -113,103 +121,95 @@ public class MainController {
         System.out.println("getUserAds()");
 
 
-        Pet.STATE state = Pet.STATE.ACTIVE;
+        Advert.STATE state = Advert.STATE.ACTIVE;
 
         switch (adState){
-            case "ACTIVE" : state = Pet.STATE.ACTIVE; break;
-            case "WAITING" : state = Pet.STATE.WAITING; break;
-            case "NONACTIVE" : state = Pet.STATE.NONACTIVE; break;
-            default: state = Pet.STATE.ACTIVE; break;
+            case "ACTIVE" : state = Advert.STATE.ACTIVE; break;
+            case "WAITING" : state = Advert.STATE.WAITING; break;
+            case "NONACTIVE" : state = Advert.STATE.NONACTIVE; break;
+            default: state = Advert.STATE.ACTIVE; break;
         }
 
-        List<Pet> pets = petRepository.findByUserEmailAndState(user.getEmail(), state);
-        return pets;
+        List<Advert> adverts = advertService.findByUserEmailAndState(user.getEmail(), state);
+        return adverts;
     }
 
 
-    @RequestMapping(value = "/pet/{petId}", method = RequestMethod.GET, produces = "application/json")
-    public Pet getPet(@PathVariable("petId") String petId){
-        System.out.println("getPet() petId = " + petId);
-        Pet pet = null;
-        if(petId != null && !"".equals(petId)){
-            pet = petRepository.findOne(petId);
-            pet.setViewCount(pet.getViewCount() + 1);
-            petRepository.save(pet);
+    @RequestMapping(value = "/advert/{advertId}", method = RequestMethod.GET, produces = "application/json")
+    public Advert getAdvert(@PathVariable("advertId") String advertId){
+        System.out.println("getAdvert() advertId = " + advertId);
+        Advert advert = null;
+        if(advertId != null && !"".equals(advertId)){
+            advert = advertService.findOne(advertId);
+            advert.setViewCount(advert.getViewCount() + 1);
+            advertService.save(advert);
         }
-        return pet;
+        return advert;
     }
 
-    @RequestMapping(value = "/pet/category/{category}", method = RequestMethod.GET, produces = "application/json")
-    public List<Pet> getPetsByCategory(@PathVariable("category") String category){
-        System.out.println("getPetByCategory() category = " + category);
-        List<Pet> pets = null;
+    @RequestMapping(value = "/advert/category/{category}", method = RequestMethod.GET, produces = "application/json")
+    public List<Advert> getAdvertsByCategory(@PathVariable("category") String category){
+        System.out.println("getAdvertByCategory() category = " + category);
+        List<Advert> adverts = null;
         if(category != null && !"".equals(category)){
-            pets = petRepository.findByCategoryName(category);
-            pets = petRepository.findByCategoryNameAndState(category, Pet.STATE.ACTIVE);
+            adverts = advertService.findByCategoryName(category);
+            adverts = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE);
         }
-        return pets;
+        return adverts;
     }
 
-    @RequestMapping(value = "/pet/category/{category}/page/{page}", method = RequestMethod.GET, produces = "application/json")
-    public List<Pet> getAdsByCategoryByPage(@PathVariable("category") String category,
+    @RequestMapping(value = "/advert/category/{category}/page/{page}", method = RequestMethod.GET, produces = "application/json")
+    public List<Advert> getAdsByCategoryByPage(@PathVariable("category") String category,
                                              @PathVariable("page") int page){
-        System.out.println("getPetsByCategoryByPage() category = " + category + " ; page = " + page);
-        Page<Pet> petsPage = petRepository.findByCategoryNameAndState(category, Pet.STATE.ACTIVE, new PageRequest(page - 1, 5));
+        System.out.println("getAdvertsByCategoryByPage() category = " + category + " ; page = " + page);
+//        Page<Advert> advertsPage = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 5));
+//
+//        List<Advert> advertList = advertsPage.getContent();
 
-        List<Pet> petList = petsPage.getContent();
+        List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 5));
 
-        System.out.println("getPetsByCategoryByPage() petList.size() = " + petList.size());
+        System.out.println("getAdvertsByCategoryByPage() advertList.size() = " + advertList.size());
 
-        return petList;
+        return advertList;
     }
 
-    @RequestMapping(value = "/pet/category/{category}/page/{page}/itemsperpage/{itemsperpage}", method = RequestMethod.GET, produces = "application/json")
-    public List<Pet> getAdsByCategoryByPageByItemsPerPage(@PathVariable("category") String category,
+    @RequestMapping(value = "/advert/category/{category}/page/{page}/itemsperpage/{itemsperpage}", method = RequestMethod.GET, produces = "application/json")
+    public List<Advert> getAdsByCategoryByPageByItemsPerPage(@PathVariable("category") String category,
                                             @PathVariable("page") int page,
                                             @PathVariable("itemsperpage") int itemsPerPage){
         System.out.println("getAdsByCategoryByPageByItemsPerPage() category = " + category + " ; page = " + page + " ; itemsPerPage = " + itemsPerPage);
-        Page<Pet> petsPage = petRepository.findByCategoryNameAndState(category, Pet.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
+//        Page<Advert> advertsPage = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
+//
+//        List<Advert> advertList = advertsPage.getContent();
 
-        List<Pet> petList = petsPage.getContent();
+        List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
 
-        System.out.println("getAdsByCategoryByPageByItemsPerPage() petList.size() = " + petList.size());
+        System.out.println("getAdsByCategoryByPageByItemsPerPage() advertList.size() = " + advertList.size());
 
-        return petList;
+        return advertList;
     }
 
-    @RequestMapping(value = "/pet/category/{category}/count", method = RequestMethod.GET)
-    public Long getAdsCountByCategory(@PathVariable("category") String category){
+    @RequestMapping(value = "/advert/category/{categoryName}/count", method = RequestMethod.GET)
+    public Long getAdsCountByCategory(@PathVariable("categoryName") String categoryName){
 
-        Long adsCountByCategory  = petRepository.countByCategoryNameAndState(category, Pet.STATE.ACTIVE);
+        Category category = categoryRepository.findFirstByName(categoryName);
+        Long adsCountByCategory  = category.getCountActive();
         System.out.println("getAdsCountByCategory() count = " + adsCountByCategory);
         return adsCountByCategory;
     }
 
-    @RequestMapping(value = "/pet", method = RequestMethod.GET, produces = "application/json")
-    public List<Pet> getPets(){
-        System.out.println("getPets()");
-        return  petRepository.findAll();
+    @RequestMapping(value = "/advert", method = RequestMethod.GET, produces = "application/json")
+    public List<Advert> getAdverts(){
+        System.out.println("getAdverts()");
+        return  advertService.findAll();
     }
 
 
     @RequestMapping(value = "/category", method = RequestMethod.GET, produces = "application/json")
-    public List<Category> getCategories(){
-        System.out.println("getCategories()");
-        return  categoryRepository.findAll();
-    }
-
-    @RequestMapping(value = "/breeds/{categoryName}",method = RequestMethod.GET)
-    public List<Breed> getBreeds(@PathVariable("categoryName") String categoryName){
-        System.out.println("categoryName = " + categoryName);
-        return breedRepository.findByCategoryName(categoryName);
-    }
-
-    @RequestMapping(value = "/text", method = RequestMethod.GET, produces = "application/json")
-    public String getText(){
-        System.out.println("call /text time = " + System.currentTimeMillis());
-
-        LocaleContextHolder.getLocale();
-        return "thread name = " +  Thread.currentThread().getName();
+    public List<Category> getCategorieByTopLevel(){
+        System.out.println("getCategorieByTopLevel()");
+        int TOP_LEVEL = 1;
+        return  categoryRepository.findByLevel(TOP_LEVEL);
     }
 
     @RequestMapping(value = "/locale", method = RequestMethod.GET)
@@ -261,12 +261,6 @@ public class MainController {
         return imageEntity;
     }
 
-    private ImageEntity saveTest() throws InterruptedException {
-        Thread.sleep(2000);
-        ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setId("555696994848");
-        return imageEntity;
-    }
 
     @RequestMapping(value = "/albums", method = RequestMethod.GET)
     public List<String> getAlbums(){
@@ -289,5 +283,44 @@ public class MainController {
     @RequestMapping(value = "/getimage/{photoid}", method = RequestMethod.GET)
     public void getImage(@PathVariable("photoid") String photoId){
         picasaImageSaver.getImage(photoId);
+    }
+
+
+    @RequestMapping(value = "/saveadvert")
+    public void makeTestSave (){
+        System.out.println("makeTestSave() start");
+        Category realEstate = new Category();
+        realEstate.setName("realestate");
+        realEstate.setLevel(1);
+
+        Category flatRent = new Category();
+        flatRent.setName("flatrent");
+
+        Category flatLongTerm = new Category();
+        flatLongTerm.setName("flatlongterm");
+
+
+        realEstate = categoryRepository.save(realEstate);
+        flatRent = categoryRepository.save(flatRent);
+        flatLongTerm = categoryRepository.save(flatLongTerm);
+
+        List<Category> childs = new ArrayList<>();
+        childs.add(flatRent);
+
+        realEstate.setChilds(childs);
+        categoryRepository.save(realEstate);
+
+        childs.clear();
+        childs.add(flatLongTerm);
+
+//        flatRent.setParent(realEstate);
+        flatRent.setChilds(childs);
+        categoryRepository.save(flatRent);
+
+//        flatLongTerm.setParent(flatRent);
+        categoryRepository.save(flatLongTerm);
+
+
+        System.out.println("makeTestSave() finish ");
     }
 }
