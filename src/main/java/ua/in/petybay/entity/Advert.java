@@ -58,10 +58,12 @@ public class Advert {
 
     private String ipAddress;
 
+    private int countPhone;
+    private int countSkype;
+    private int countFavorite;
+
     public Advert() {
     }
-
-
 
     public String getId() {
         return id;
@@ -163,11 +165,39 @@ public class Advert {
         this.ipAddress = ipAddress;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getCountPhone() {
+        return countPhone;
+    }
+
+    public void setCountPhone(int countPhone) {
+        this.countPhone = countPhone;
+    }
+
+    public int getCountSkype() {
+        return countSkype;
+    }
+
+    public void setCountSkype(int countSkype) {
+        this.countSkype = countSkype;
+    }
+
+    public int getCountFavorite() {
+        return countFavorite;
+    }
+
+    public void setCountFavorite(int countFavorite) {
+        this.countFavorite = countFavorite;
+    }
+
     @Override
     public String toString() {
         return "Advert{" +
                 "id='" + id + '\'' +
-                ", category=" + categories +
+                ", categories=" + categories +
                 ", location=" + location +
                 ", price=" + price +
                 ", publicationDate=" + publicationDate +
@@ -177,6 +207,11 @@ public class Advert {
                 ", active='" + active + '\'' +
                 ", user=" + user +
                 ", imageEntity=" + imageEntity +
+                ", state=" + state +
+                ", ipAddress='" + ipAddress + '\'' +
+                ", countPhone=" + countPhone +
+                ", countSkype=" + countSkype +
+                ", countFavorite=" + countFavorite +
                 '}';
     }
 

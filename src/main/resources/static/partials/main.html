@@ -16,16 +16,16 @@
 <div class="row">
     <div class="col-md-7 col-sm-7">
         <div class="row">
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3" ng-repeat="category in categoriesList">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3" ng-repeat="category in categoriesList | orderBy: 'displayOrder'">
                 <a class="thumbnail" ng-click="changeCategory(category)"><img ng-src={{"images/"+category.icon}} />
                     <div class="caption">
-                        <strong>{{category.name}}</strong>
+                        <strong>{{getCategoryName(category)}}</strong>
                     </div>
                 </a>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="currentCategory">
                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 border" ng-repeat="subcategory in currentCategory.childs">
-                    <a href="">{{subcategory.name}}</a>
+                    <a href="#/advertlist/{{currentCategory.name}}/{{subcategory.name}}">{{getCategoryName(subcategory)}}</a>
                 </div>
             </div>
         </div>

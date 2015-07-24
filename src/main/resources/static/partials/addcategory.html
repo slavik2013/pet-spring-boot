@@ -1,0 +1,86 @@
+<div class="grey_border" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+    <div class="row nopadding nomargin">
+        <div class="col-sm-1 nopadding nomargin"></div>
+        <div class="col-sm-11 nopadding nomargin"><h4 class="nopadding nomargin"><strong>Add category</strong></h4></div>
+    </div>
+
+    <hr/>
+
+
+    <form class="form-horizontal" ng-submit="submitCategory()">
+        <div class="form-group">
+            <label class="control-label col-xs-3" for="inputName">Name</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="inputName" placeholder="Name" ng-model="category.name">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-3">Parent category</label>
+            <div class="col-xs-8">
+                <select class="form-control" ng-model="category.parent">
+                    <option ng-repeat="category in categoriesList">{{category.name}}</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-xs-3" for="inputTitleRU">Title RU</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="inputTitleRU" placeholder="Title RU" ng-model="category.titleRU">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-3" for="inputTitleUA">Title UA</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="inputTitleUA" placeholder="Title UA" ng-model="category.titleUA">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-3" for="inputTitleEN">Title EN</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="inputTitleEN" placeholder="Title EN" ng-model="category.titleEN">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-xs-3" for="inputIconName">Icon name</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="inputIconName" placeholder="Icon name" ng-model="category.icon">
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <label class="control-label col-xs-3">Level</label>
+            <div class="col-xs-8">
+                <select class="form-control" ng-model="category.level">
+                    <option>0</option>
+                    <option>1</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-3">Display order</label>
+            <div class="col-xs-8">
+                <select class="form-control" ng-model="category.displayOrder">
+                    <option ng-repeat="value in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]">{{value}}</option>
+                </select>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="form-group">
+            <div class="col-xs-offset-3 col-xs-8">
+                <input type="submit" class="btn btn-primary btn-lg" value="Submit">
+            </div>
+        </div>
+    </form>
+</div>

@@ -70,12 +70,23 @@ var translations_ua = {
 };
 
 controllers.config(['$translateProvider', function ($translateProvider) {
-    // add translation table
+
     $translateProvider
         .translations('en', translations_en)
         .translations('ru', translations_ru)
-        .translations('ua', translations_ua)
-        .preferredLanguage('ru');
+        .translations('ua', translations_ua);
+
+    $translateProvider.preferredLanguage('ru');
+
+    var $cookies;
+    angular.injector(['ngCookies']).invoke(function(_$cookies_) {
+        $cookies = _$cookies_;
+    });
+
+    if ($cookies.get('language')) {
+        $translateProvider.preferredLanguage($cookies.get('language'));
+    }
+
 }]);
 
 controllers.directive('ngThumb', function($window) {
@@ -129,7 +140,27 @@ function getCategoriesList($scope, $http){
         url: 'api/category',
         headers: {
             'Content-Type': undefined
-        }
+        },
+        cache: true
+    };
+
+    $http(req).success(function(data){
+        $scope.categoriesList = data;
+    }).error(function(){
+
+    });
+}
+
+
+
+function getTopCategoriesList($scope, $http){
+    var req = {
+        method: 'GET',
+        url: 'api/topcategory',
+        headers: {
+            'Content-Type': undefined
+        },
+        cache: true
     };
 
     $http(req).success(function(data){
@@ -250,7 +281,7 @@ function userLogout($scope, $http, $window){
     $window.location.href = '/';
 }
 
-controllers.controller('loginUserController', function ($scope, $http, $translate, $window){
+controllers.controller('loginUserController', function ($scope, $http, $translate, $window, $cookies,$route){
     //alert("get user");
     getUser($scope, $http);
 
@@ -266,6 +297,8 @@ controllers.controller('loginUserController', function ($scope, $http, $translat
 
     $scope.changeLanguage = function (key) {
         $translate.use(key);
+        $cookies.put('language', key.toLowerCase());
+        $route.reload();
     };
 
     $scope.userLogout = function(){
@@ -273,23 +306,34 @@ controllers.controller('loginUserController', function ($scope, $http, $translat
     }
 });
 
-controllers.controller('mainController', function ($scope, $routeParams, $http, $location) {
+controllers.controller('mainController', function ($scope, $routeParams, $http, $location, $cookies) {
 
-    //if(categoriesCache == null)
-    getCategoriesList($scope, $http);
-    //getUser($scope, $http);
-    //$scope.authenticatedUser = $cacheFactory('userCache').get('user');
-    //alert(JSON.stringify($scope.authenticatedUser));
+    getTopCategoriesList($scope, $http);
     $scope.currentCategory = {};
-
     $scope.changeCategory = function(category){
-
         if ($scope.currentCategory == category)
             $scope.currentCategory = undefined;
         else
             $scope.currentCategory = category;
-    }
+    };
 
+    $scope.getCategoryName = function(category){
+        var currentLanguage = 'ru';
+        if($cookies.get('language'))
+            currentLanguage = $cookies.get('language');
+
+        var titles = category.titles;
+
+        var name = {};
+        for(var i = 0; i < titles.length; i++){
+            var title = titles[i];
+            if (title.language == currentLanguage) {
+                name = title.title;
+                break;
+            }
+        }
+        return name;
+    }
 });
 
 
@@ -314,22 +358,26 @@ controllers.controller('advertlistController', function ($scope, $routeParams, $
 
     $cookies.put('itemsPerPage', $scope.itemsPerPage);
 
-    getAdsCountByCategoryByPage($scope, $http, $routeParams.category);
+    $scope.requestCategory = $routeParams.category;
+    if ($routeParams.subcategory)
+        $scope.requestCategory = $routeParams.category  + "/" + $routeParams.subcategory;
+
+    getAdsCountByCategoryByPage($scope, $http, $scope.requestCategory);
 
 
     $scope.itemsPerPageListener = function(){
         $cookies.put('itemsPerPage', $scope.itemsPerPage);
-        $location.path("/advertlist/" + $routeParams.category);
+        $location.path("/advertlist/" + $scope.requestCategory);
     };
 
-    getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage);
+    getAdsByCategoryByPage($scope, $http, $scope.requestCategory, $scope.currentPage, $scope.itemsPerPage);
 
     $scope.setPage = function (pageNo) {
         $scope.currentPage = pageNo;
     };
 
     $scope.pageChanged = function() {
-        $location.path("/advertlist/" + $routeParams.category + "/page/" + $scope.currentPage);
+        $location.path("/advertlist/" + $scope.requestCategory + "/page/" + $scope.currentPage);
         //getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage)
     };
 
@@ -690,4 +738,47 @@ controllers.controller('accountController', function ($scope, $routeParams, $htt
 
     };
 
+});
+
+
+
+
+
+
+
+controllers.controller('addCategoryController', function($scope, $http, $location, $window){
+
+
+    $scope.category = {};
+
+    $scope.category.titles = [];
+
+    getCategoriesList($scope, $http);
+
+    $scope.submitCategory = function(){
+
+        $scope.category.titles.push({language:'ru', title: $scope.category.titleRU});
+        $scope.category.titles.push({language:'ua', title: $scope.category.titleUA});
+        $scope.category.titles.push({language:'en', title: $scope.category.titleEN});
+
+        delete $scope.category.titleRU;
+        delete $scope.category.titleUA;
+        delete $scope.category.titleEN;
+
+        var req = {
+            method: 'POST',
+            url: '/api/category',
+            data: $scope.category,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        $http(req).success(function (data) {
+            $scope.category = {};
+            $route.reload();
+        }).error(function () {
+
+        });
+    }
 });

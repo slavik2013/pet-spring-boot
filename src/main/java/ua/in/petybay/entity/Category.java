@@ -1,7 +1,7 @@
 package ua.in.petybay.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,6 +12,9 @@ import java.util.List;
  */
 @Document(collection = "category")
 public class Category {
+
+    @Transient
+    public static final int TOP_LEVEL = 1;
 
     public static class Title {
         String language;
@@ -32,9 +35,17 @@ public class Category {
         public void setTitle(String title) {
             this.title = title;
         }
+
+        @Override
+        public String toString() {
+            return "Title{" +
+                    "language='" + language + '\'' +
+                    ", title='" + title + '\'' +
+                    '}';
+        }
     }
 
-    @Id @JsonIgnore
+    @Id
     private String id;
     private String name;
     private String icon;
@@ -46,8 +57,12 @@ public class Category {
 
     int level;
 
+    String parent;
+
     @DBRef
     private List<Category> childs;
+
+    int displayOrder;
 
     public Category() {
     }
@@ -132,6 +147,22 @@ public class Category {
         this.childs = childs;
     }
 
+    public String getParent() {
+        return parent;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
+    }
+
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
@@ -144,7 +175,9 @@ public class Category {
                 ", countNonActive=" + countNonActive +
                 ", countWaiting=" + countWaiting +
                 ", level=" + level +
+                ", parent='" + parent + '\'' +
                 ", childs=" + childs +
+                ", displayOrder=" + displayOrder +
                 '}';
     }
 }

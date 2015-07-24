@@ -11,4 +11,5 @@ import java.util.List;
 public interface CategoryRepository extends MongoRepository<Category,String> {
     Category findFirstByName(String name);
     List<Category> findByLevel(int level);
+    Long countByLevel(int level);
 }

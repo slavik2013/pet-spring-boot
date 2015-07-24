@@ -162,9 +162,21 @@ public class MainController {
     public List<Advert> getAdsByCategoryByPage(@PathVariable("category") String category,
                                              @PathVariable("page") int page){
         System.out.println("getAdvertsByCategoryByPage() category = " + category + " ; page = " + page);
-//        Page<Advert> advertsPage = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 5));
-//
-//        List<Advert> advertList = advertsPage.getContent();
+
+
+        List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 5));
+
+        System.out.println("getAdvertsByCategoryByPage() advertList.size() = " + advertList.size());
+
+        return advertList;
+    }
+
+    @RequestMapping(value = "/advert/category/{category}/{subcategory}/page/{page}", method = RequestMethod.GET, produces = "application/json")
+    public List<Advert> getAdsByCategoryBySubcategoryByPage(@PathVariable("category") String category,
+                                                            @PathVariable("category") String subcategory,
+                                               @PathVariable("page") int page){
+        System.out.println("getAdvertsByCategoryByPage() category = " + category + " ; page = " + page);
+
 
         List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 5));
 
@@ -178,9 +190,6 @@ public class MainController {
                                             @PathVariable("page") int page,
                                             @PathVariable("itemsperpage") int itemsPerPage){
         System.out.println("getAdsByCategoryByPageByItemsPerPage() category = " + category + " ; page = " + page + " ; itemsPerPage = " + itemsPerPage);
-//        Page<Advert> advertsPage = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
-//
-//        List<Advert> advertList = advertsPage.getContent();
 
         List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
 
@@ -189,14 +198,38 @@ public class MainController {
         return advertList;
     }
 
+    @RequestMapping(value = "/advert/category/{category}/{subcategory}/page/{page}/itemsperpage/{itemsperpage}", method = RequestMethod.GET, produces = "application/json")
+    public List<Advert> getAdsByCategoryByPageByItemsPerPage(@PathVariable("category") String category,
+                                                             @PathVariable("subcategory") String subcategory,
+                                                             @PathVariable("page") int page,
+                                                             @PathVariable("itemsperpage") int itemsPerPage){
+        System.out.println("getAdsByCategoryByPageByItemsPerPage() category = " + category + " ; page = " + page + " ; itemsPerPage = " + itemsPerPage);
+
+        List<Advert> advertList = advertService.findByCategoryNameAndState(subcategory, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
+
+        System.out.println("getAdsByCategoryByPageByItemsPerPage() advertList.size() = " + advertList.size());
+
+        return advertList;
+    }
+
+
+
     @RequestMapping(value = "/advert/category/{categoryName}/count", method = RequestMethod.GET)
     public Long getAdsCountByCategory(@PathVariable("categoryName") String categoryName){
-
         Category category = categoryRepository.findFirstByName(categoryName);
         Long adsCountByCategory  = category.getCountActive();
         System.out.println("getAdsCountByCategory() count = " + adsCountByCategory);
         return adsCountByCategory;
     }
+
+    @RequestMapping(value = "/advert/category/{categoryName}/{subcategoryName}/count", method = RequestMethod.GET)
+    public Long getAdsCountByCategoryBySubCategory(@PathVariable("categoryName") String categoryName, @PathVariable("subcategoryName") String subcategoryName){
+        Category category = categoryRepository.findFirstByName(subcategoryName);
+        Long adsCountByCategory  = category.getCountActive();
+        System.out.println("getAdsCountByCategory() count = " + adsCountByCategory);
+        return adsCountByCategory;
+    }
+
 
     @RequestMapping(value = "/advert", method = RequestMethod.GET, produces = "application/json")
     public List<Advert> getAdverts(){
@@ -206,10 +239,17 @@ public class MainController {
 
 
     @RequestMapping(value = "/category", method = RequestMethod.GET, produces = "application/json")
-    public List<Category> getCategorieByTopLevel(){
+    public List<Category> getCategories(){
         System.out.println("getCategorieByTopLevel()");
-        int TOP_LEVEL = 1;
-        return  categoryRepository.findByLevel(TOP_LEVEL);
+
+//        return  categoryRepository.findByLevel(Category.TOP_LEVEL);
+        return categoryRepository.findAll();
+    }
+
+    @RequestMapping(value = "/topcategory", method = RequestMethod.GET, produces = "application/json")
+    public List<Category> getCategoriesByTopLevel(){
+        System.out.println("getCategorieByTopLevel()");
+        return  categoryRepository.findByLevel(Category.TOP_LEVEL);
     }
 
     @RequestMapping(value = "/locale", method = RequestMethod.GET)
@@ -322,5 +362,28 @@ public class MainController {
 
 
         System.out.println("makeTestSave() finish ");
+    }
+
+    @RequestMapping(value = "/category", method = RequestMethod.POST)
+    public void addCategory(@RequestBody Category category){
+
+        int count = (int)((long)(categoryRepository.countByLevel(Category.TOP_LEVEL)));
+        if (category.getDisplayOrder() == 0){
+            category.setDisplayOrder(count + 1);
+        }
+
+        categoryRepository.save(category);
+
+        if (category.getLevel() != Category.TOP_LEVEL && category.getParent() != null) {
+            Category parentCategory = categoryRepository.findFirstByName(category.getParent());
+            List<Category> childs = parentCategory.getChilds();
+            if (childs == null)
+                childs = new ArrayList();
+            childs.add(category);
+            parentCategory.setChilds(childs);
+            categoryRepository.save(parentCategory);
+        }
+
+        System.out.println("addCategory() category = " + category);
     }
 }

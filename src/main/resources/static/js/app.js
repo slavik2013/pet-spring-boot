@@ -3,25 +3,9 @@
  */
 var app = angular.module('app', [
     'ngRoute',
-    'controllers',
-    'pascalprecht.translate'
+    'controllers'
 ]);
 
-//var translations_en = {
-//    MY_PROFILE: 'My profile'
-//};
-//
-//var translations_ru = {
-//    MY_PROFILE: 'Мой профиль'
-//};
-//
-//app.config(['$translateProvider', function ($translateProvider) {
-//    // add translation table
-//    $translateProvider
-//        .translations('en', translations_en)
-//        .translations('ru', translations_ru)
-//        .preferredLanguage('ru');
-//}]);
 
 app.config(['$routeProvider',
     function($routeProvider) {
@@ -35,6 +19,10 @@ app.config(['$routeProvider',
                 controller: 'addadvertController'
             }).
             when('/advertlist/:category', {
+                templateUrl: 'partials/advertlist.html',
+                controller: 'advertlistController'
+            }).
+            when('/advertlist/:category/:subcategory', {
                 templateUrl: 'partials/advertlist.html',
                 controller: 'advertlistController'
             }).
@@ -60,6 +48,10 @@ app.config(['$routeProvider',
             when('/myaccount', {
                 templateUrl: 'partials/myaccount.html',
                 controller: 'accountController'
+            }).
+            when('/addcategory', {
+                templateUrl: 'partials/addcategory.html',
+                controller: 'addCategoryController'
             }).
             otherwise({
                 redirectTo: '/index'
