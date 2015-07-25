@@ -306,6 +306,25 @@ controllers.controller('loginUserController', function ($scope, $http, $translat
     }
 });
 
+function getCategoryTitle(category, $cookies){
+    var currentLanguage = 'ru';
+    if($cookies.get('language'))
+        currentLanguage = $cookies.get('language');
+
+    var titles = category.titles;
+
+    var name = {};
+    for(var i = 0; i < titles.length; i++){
+        var title = titles[i];
+        if (title.language == currentLanguage) {
+            name = title.title;
+            break;
+        }
+    }
+    return name;
+}
+
+
 controllers.controller('mainController', function ($scope, $routeParams, $http, $location, $cookies) {
 
     getTopCategoriesList($scope, $http);
@@ -318,22 +337,8 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
     };
 
     $scope.getCategoryName = function(category){
-        var currentLanguage = 'ru';
-        if($cookies.get('language'))
-            currentLanguage = $cookies.get('language');
-
-        var titles = category.titles;
-
-        var name = {};
-        for(var i = 0; i < titles.length; i++){
-            var title = titles[i];
-            if (title.language == currentLanguage) {
-                name = title.title;
-                break;
-            }
-        }
-        return name;
-    }
+        return getCategoryTitle(category, $cookies);
+    };
 });
 
 
@@ -380,13 +385,32 @@ controllers.controller('advertlistController', function ($scope, $routeParams, $
         $location.path("/advertlist/" + $scope.requestCategory + "/page/" + $scope.currentPage);
         //getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage)
     };
+});
 
 
+controllers.controller('ModalInstanceCtrl', function ($scope, $modalInstance, categoriesList, $cookies) {
 
+    $scope.categoriesList = categoriesList;
+    $scope.selected = {
+        category: $scope.categoriesList[0]
+    };
+
+    $scope.ok = function () {
+        $modalInstance.close($scope.selected.category);
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.getCategoryName = function(category){
+        return getCategoryTitle(category, $cookies);
+    };
 
 });
 
-controllers.controller('addadvertController', function ($scope, $http, $location, FileUploader) {
+
+controllers.controller('addadvertController', function ($scope, $http, $location, $modal, FileUploader, $cookies) {
 
     var uploader = $scope.uploader = new FileUploader({
         url: 'api/saveimage',
@@ -396,13 +420,13 @@ controllers.controller('addadvertController', function ($scope, $http, $location
 
     // FILTERS
 
-    //uploader.filters.push({
-    //    name: 'imageFilter',
-    //    fn: function(item /*{File|FileLikeObject}*/, options) {
-    //        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-    //        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1 && item.file.size <= 100 * 1024 * 1024;
-    //    }
-    //});
+    uploader.filters.push({
+        name: 'imageFilter',
+        fn: function(item /*{File|FileLikeObject}*/, options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;// && item.file.size <= 100 * 1024 * 1024;
+        }
+    });
 
     uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
         console.info('onWhenAddingFileFailed', item, filter, options);
@@ -467,7 +491,7 @@ controllers.controller('addadvertController', function ($scope, $http, $location
     /*if(!categoriesCache)
         $scope.categories = categoriesCache;
     else*/
-        getCategoriesList($scope, $http);
+        getTopCategoriesList($scope, $http);
 
     $scope.deleteImage = function(item) {
 
@@ -493,9 +517,11 @@ controllers.controller('addadvertController', function ($scope, $http, $location
 
         $scope.advert.categories = [];
 
-        $scope.advert.categories.push($scope.advert.category);
+        //$scope.advert.categories.push($scope.advert.category);
+        //
+        //delete $scope.advert.category;
 
-        delete $scope.advert.category;
+        $scope.advert.categories.push($scope.selected);
 
         for (var imageEntityId in $scope.images){
             $scope.advert.imageEntity.push($scope.images[imageEntityId]);
@@ -518,6 +544,40 @@ controllers.controller('addadvertController', function ($scope, $http, $location
 
     };
 
+
+
+
+    $scope.animationsEnabled = true;
+
+    $scope.open = function (size) {
+
+        var modalInstance = $modal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: 'myModalContent.html',
+            controller: 'ModalInstanceCtrl',
+            size: size,
+            resolve: {
+                categoriesList: function () {
+                    return $scope.categoriesList;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selected = selectedItem;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.toggleAnimation = function () {
+        $scope.animationsEnabled = !$scope.animationsEnabled;
+    };
+
+    $scope.getCategoryName = function(category){
+        return getCategoryTitle(category, $cookies);
+    };
+
 });
 
 controllers.controller('dateController', function ($scope){
@@ -532,7 +592,7 @@ function getPetById($scope, $http, advertId){
         headers: {
             'Content-Type': undefined
         }
-    }
+    };
 
     $http(req).success(function(data){
         $scope.advertSingle = data;
@@ -741,16 +801,9 @@ controllers.controller('accountController', function ($scope, $routeParams, $htt
 });
 
 
-
-
-
-
-
 controllers.controller('addCategoryController', function($scope, $http, $location, $window){
 
-
     $scope.category = {};
-
     $scope.category.titles = [];
 
     getCategoriesList($scope, $http);
