@@ -685,8 +685,15 @@ function getMyads($scope, $http, adState){
     $http(req).success(function (data) {
 
         $scope.rowCollection = data;
-        $scope.adverts = data;
 
+        if (adState == "ACTIVE")
+            $scope.advertsActive = data;
+
+        if (adState == "WAITING")
+            $scope.advertsWaiting = data;
+
+        if (adState == "NONACTIVE")
+            $scope.advertsNonactive = data;
 
     }).error(function(data){
 
@@ -726,12 +733,20 @@ function deactivateAd($scope, $http, adId){
 }
 
 function deleteItemFromAdverts(adverts, advertId){
+    var deletedAdvert = {}
     for (var i = 0, len = adverts.length; i<len; i++) {
         if (adverts[i].id == advertId) {
+            deletedAdvert = adverts[i];
             adverts.splice(i, 1);
             break;
         }
     };
+
+    return deletedAdvert;
+}
+
+function addItemToAdverts(adverts, advert){
+    adverts.push(advert);
 }
 
 function viewAdvert($location, advertId){
@@ -752,19 +767,25 @@ controllers.controller('accountController', function ($scope, $routeParams, $htt
 
     $scope.confirmAd = function(advertId){
         confirmAd($scope, $http, advertId);
-        deleteItemFromAdverts($scope.adverts, advertId);
+        var deletedAdvert = deleteItemFromAdverts($scope.advertsWaiting, advertId);
+        addItemToAdverts($scope.advertsActive, deletedAdvert);
     };
 
     $scope.deactivateAd = function(advertId){
         deactivateAd($scope, $http, advertId);
-        deleteItemFromAdverts($scope.adverts, advertId);
+        var deletedAdvert = deleteItemFromAdverts($scope.advertsActive, advertId);
+        addItemToAdverts($scope.advertsNonactive, deletedAdvert);
     };
 
     $scope.activateAd = function(advertId){
         confirmAd($scope, $http, advertId);
-        deleteItemFromAdverts($scope.adverts, advertId);
+        var deletedAdvert = deleteItemFromAdverts($scope.advertsNonactive, advertId);
+        addItemToAdverts($scope.advertsActive, deletedAdvert);
     };
 
+    getMyads($scope, $http, "ACTIVE");
+    getMyads($scope, $http, "WAITING");
+    getMyads($scope, $http, "NONACTIVE");
 
     $scope.activeAdverts = function(){
         getMyads($scope, $http, "ACTIVE");

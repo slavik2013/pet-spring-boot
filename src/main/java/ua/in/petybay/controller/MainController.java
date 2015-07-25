@@ -226,7 +226,7 @@ public class MainController {
     public Long getAdsCountByCategoryBySubCategory(@PathVariable("categoryName") String categoryName, @PathVariable("subcategoryName") String subcategoryName){
         Category category = categoryRepository.findFirstByName(subcategoryName);
         Long adsCountByCategory  = category.getCountActive();
-        System.out.println("getAdsCountByCategory() count = " + adsCountByCategory);
+        System.out.println("getAdsCountByCategoryBySubCategory() count = " + adsCountByCategory);
         return adsCountByCategory;
     }
 

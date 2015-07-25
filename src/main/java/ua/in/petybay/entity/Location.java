@@ -12,12 +12,9 @@ public class Location {
     @NotNull
     String city;
 
-    public Location() {
-    }
+    String detailAddress;
 
-    public Location(String region, String city) {
-        this.region = region;
-        this.city = city;
+    public Location() {
     }
 
     public String getRegion() {
@@ -36,11 +33,20 @@ public class Location {
         this.city = city;
     }
 
+    public String getDetailAddress() {
+        return detailAddress;
+    }
+
+    public void setDetailAddress(String detailAddress) {
+        this.detailAddress = detailAddress;
+    }
+
     @Override
     public String toString() {
         return "Location{" +
                 "region='" + region + '\'' +
                 ", city='" + city + '\'' +
+                ", detailAddress='" + detailAddress + '\'' +
                 '}';
     }
 }

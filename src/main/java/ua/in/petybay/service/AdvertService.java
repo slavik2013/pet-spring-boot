@@ -91,12 +91,14 @@ public class AdvertService implements IAdvertService {
     }
 
     @Override
-    public List<Advert> findByUserEmailAndState(String userEmail, Advert.STATE state){return null;}
+    public List<Advert> findByUserEmailAndState(String userEmail, Advert.STATE state){
+        return advertRepository.findByUserEmailAndState(userEmail, state);
+    }
 
     @Override
     public List<Advert> findByCategoryNameAndState(String categoryName, Advert.STATE state, Pageable pageable){
         Category category = categoryRepository.findFirstByName(categoryName);
-        return mongoOperations.find(Query.query(Criteria.where("categories").in(category.getId())).skip(pageable.getOffset()).limit(pageable.getPageSize()), Advert.class);
+        return mongoOperations.find(Query.query(Criteria.where("categories").in(category.getId()).and("state").is(state)).skip(pageable.getOffset()).limit(pageable.getPageSize()), Advert.class);
     }
 
     @Override

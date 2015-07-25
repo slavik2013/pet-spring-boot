@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import ua.in.petybay.Events.OnRegistrationCompleteEvent;
 import ua.in.petybay.dao.AdvertVerificationTokenRepository;
+import ua.in.petybay.dao.CategoryRepository;
 import ua.in.petybay.dao.UserRepository;
 import ua.in.petybay.dao.VerificationTokenRepository;
-import ua.in.petybay.entity.Advert;
-import ua.in.petybay.entity.AdvertVerificationToken;
-import ua.in.petybay.entity.User;
-import ua.in.petybay.entity.VerificationToken;
+import ua.in.petybay.entity.*;
 import ua.in.petybay.security.PasswordEncoderService;
 import ua.in.petybay.security.SecUserDetails;
 import ua.in.petybay.security.SecUserDetailsService;
@@ -59,6 +57,8 @@ public class MyController {
     @Autowired
     SecUserDetailsService secUserDetailsService;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
 //    @InitBinder
 //    public void initBinder(WebDataBinder binder){
 //        binder.setDisallowedFields(new String[]{"passwordconfirm"});
@@ -189,6 +189,12 @@ public class MyController {
             advert.setState(Advert.STATE.ACTIVE);
 
             advertService.save(advert);
+
+            for(Category category : advert.getCategories()){
+                category.setCountActive(category.getCountActive() + 1);
+                category.setCountWaiting(category.getCountWaiting() - 1);
+                categoryRepository.save(category);
+            }
         }
         verificationToken.setVerified(true);
         advertVerificationTokenRepository.save(verificationToken);
@@ -206,9 +212,25 @@ public class MyController {
         Advert advert = advertService.findOne(adId);
         User advertUser = advert.getUser();
 
+        Advert.STATE state = advert.getState();
+
         if (advertUser.getEmail().equals(user.getEmail())) {
             advert.setState(Advert.STATE.ACTIVE);
             advertService.save(advert);
+        }
+
+        if (Advert.STATE.WAITING.equals(state)){
+            for(Category category : advert.getCategories()){
+                category.setCountActive(category.getCountActive() + 1);
+                category.setCountWaiting(category.getCountWaiting() - 1);
+                categoryRepository.save(category);
+            }
+        } else if (Advert.STATE.NONACTIVE.equals(state)){
+            for(Category category : advert.getCategories()){
+                category.setCountActive(category.getCountActive() + 1);
+                category.setCountNonActive(category.getCountNonActive() - 1);
+                categoryRepository.save(category);
+            }
         }
       return "ad confirmed";
     }
@@ -226,6 +248,12 @@ public class MyController {
         if (advertUser.getEmail().equals(user.getEmail())) {
             advert.setState(Advert.STATE.NONACTIVE);
             advertService.save(advert);
+
+            for(Category category : advert.getCategories()){
+                category.setCountActive(category.getCountActive() - 1);
+                category.setCountNonActive(category.getCountNonActive() + 1);
+                categoryRepository.save(category);
+            }
         }
         return "ad deactivated";
     }

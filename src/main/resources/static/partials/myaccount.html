@@ -3,7 +3,7 @@
 <tabset justified="true">
     <tab heading="Adverts">
         <tabset >
-            <tab heading="Active ({{adverts.length}})" select="activeAdverts()">
+            <tab heading="Active ({{advertsActive.length}})" select="activeAdverts()">
                 <!--<table ng-table="tableParams" class="table ng-table-responsive">-->
                     <!--<tbody ng-repeat="advert in adverts">-->
                     <!--<tr>-->
@@ -52,7 +52,7 @@
                         <th>Statistic</th>
                     </tr>
                     </thead>
-                    <tbody ng-repeat="advert in adverts">
+                    <tbody ng-repeat="advert in advertsActive">
                     <tr>
                         <td>{{advert.publicationDate | milisecondsToDateTime | date:'dd/MM/yyyy'}}</td>
                         <td>
@@ -141,7 +141,7 @@
                 </table>
 
             </tab>
-            <tab heading="Waiting ({{adverts.length}})" select="waitingAdverts()">
+            <tab heading="Waiting ({{advertsWaiting.length}})" select="waitingAdverts()">
                 <div>
                     <table class="table">
                         <thead>
@@ -154,7 +154,7 @@
                             <th>Statistic</th>
                         </tr>
                         </thead>
-                        <tbody ng-repeat="advert in adverts">
+                        <tbody ng-repeat="advert in advertsWaiting">
                         <tr>
                             <td>{{advert.publicationDate | milisecondsToDateTime | date:'HH:mm dd/MM/yyyy'}}</td>
                             <td>
@@ -182,7 +182,7 @@
                                     <tbody>
                                     <tr>
                                         <td>Views:</td>
-                                        <td>12</td>
+                                        <td>{{advert.viewCount}}</td>
                                     </tr>
                                     <tr>
                                         <td>Phone:</td>
@@ -205,7 +205,7 @@
                     </table>
                 </div>
             </tab>
-            <tab heading="Non active ({{adverts.length}})" select="nonActiveAdverts()">
+            <tab heading="Non active ({{advertsNonactive.length}})" select="nonActiveAdverts()">
                 <table class="table">
                     <thead>
                     <tr>
@@ -217,7 +217,7 @@
                         <th>Statistic</th>
                     </tr>
                     </thead>
-                    <tbody ng-repeat="advert in adverts">
+                    <tbody ng-repeat="advert in advertsNonactive">
                     <tr>
                         <td>{{advert.publicationDate | milisecondsToDateTime | date:'HH:mm dd/MM/yyyy'}}</td>
                         <td>
@@ -245,7 +245,7 @@
                                 <tbody>
                                 <tr>
                                     <td>Views:</td>
-                                    <td>12</td>
+                                    <td>{{advert.viewCount}}</td>
                                 </tr>
                                 <tr>
                                     <td>Phone:</td>
