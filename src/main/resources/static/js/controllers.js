@@ -328,6 +328,7 @@ function getCategoryTitle(category, $cookies){
 controllers.controller('mainController', function ($scope, $routeParams, $http, $location, $cookies) {
 
     getTopCategoriesList($scope, $http);
+    getRegions($scope, $http);
     $scope.currentCategory = {};
     $scope.changeCategory = function(category){
         if ($scope.currentCategory == category)
@@ -338,6 +339,10 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
 
     $scope.getCategoryName = function(category){
         return getCategoryTitle(category, $cookies);
+    };
+
+    $scope.getRegionName = function(region){
+        return getTitleByEntity(region, $cookies);
     };
 });
 

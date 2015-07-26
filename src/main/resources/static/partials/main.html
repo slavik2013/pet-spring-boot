@@ -5,7 +5,22 @@
                 <input type="text" class="form-control" id="searckKeyword" placeholder="Keyword" style="width: 100%">
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                <input type="text" class="form-control" id="searchLocation" placeholder="Location" style="width: 100%">
+                <div class="btn-group" dropdown is-open="status.isopen" style="width: 100%">
+                <input type="text" class="form-control" id="searchLocation" placeholder="Location" style="width: 100%" dropdown-toggle>
+                <!--<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">-->
+                    <!--<li role="menuitem"><a href="#">Action</a></li>-->
+                    <!--<li role="menuitem"><a href="#">Another action</a></li>-->
+                    <!--<li role="menuitem"><a href="#">Something else here</a></li>-->
+                    <!--<li class="divider"></li>-->
+                    <!--<li role="menuitem"><a href="#">Separated link</a></li>-->
+                <!--</ul>-->
+
+                    <div class="dropdown-menu padding_all" style="width: 100%">
+                        <div ng-repeat="region in regions">
+                            <a>{{getRegionName(region)}}</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                 <button type="submit" class="btn btn-primary">{{ 'SEARCH' | translate }}</button>
