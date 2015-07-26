@@ -115,6 +115,18 @@ body {
     background: none repeat scroll 0% 0% #FFD25E;
 }
 
+.yellow_background2{
+    background: none repeat scroll 0% 0% #ffc77e;
+}
+
+.yellow_background3{
+    background: none repeat scroll 0% 0% #7bd1a1;
+}
+
+.blue_background{
+    background: none repeat scroll 0% 0% #95cdb9;
+}
+
 .color_red{
     color: lightsalmon;
 }
@@ -128,7 +140,22 @@ body {
 }
 
 .yellow_border{
-    border: 1px solid #e59d5a;
+    border: 1px solid #e57d3d;
+    border-radius: 4px;
+}
+
+.yellow_border2{
+    border: 1px solid #e5c29b;
+    border-radius: 4px;
+}
+
+.yellow_border3{
+    border: 1px solid #08a67a;
+    border-radius: 4px;
+}
+
+.blue_border{
+    border: 1px solid #08c793;
     border-radius: 4px;
 }
 

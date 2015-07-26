@@ -1,10 +1,11 @@
-<div class="grey_border" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
-    <div class="row nopadding nomargin">
-        <div class="col-sm-1 nopadding nomargin"></div>
-        <div class="col-sm-11 nopadding nomargin"><h4 class="nopadding nomargin"><strong>Add free advert on PetyBay {{hashPath}}</strong></h4></div>
+<div class="" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+    <div class="row">
+        <div class="col-sm-1 "></div>
+        <div class="col-sm-11 "><h3><strong>Add free advert on PetyBay {{hashPath}}</strong></h3></div>
     </div>
 
-    <hr/>
+    <hr class="nomargin grey_border"/>
+
 
     <div class="alert alert-danger" role="alert" ng-show="addAdError">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -12,7 +13,7 @@
         {{addAdError}}
     </div>
 
-<form class="form-horizontal" ng-submit="submit()">
+<form class="form-horizontal margine_top_15" ng-submit="submit()">
     <div class="form-group">
         <label class="control-label col-xs-3" for="inputTitle">Title</label>
         <div class="col-xs-8">
@@ -101,7 +102,7 @@
 
 
 
-    <hr/>
+    <hr />
 
     <div class="form-group" ng-show="selected">
         <label class="control-label col-xs-3">Price</label>

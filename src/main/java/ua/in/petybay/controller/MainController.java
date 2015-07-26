@@ -11,19 +11,25 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import ua.in.petybay.dao.CategoryRepository;
-import ua.in.petybay.entity.Advert;
-import ua.in.petybay.entity.Category;
-import ua.in.petybay.entity.ImageEntity;
-import ua.in.petybay.entity.User;
+import ua.in.petybay.dao.RegionRepository;
+import ua.in.petybay.entity.*;
 import ua.in.petybay.security.SecUserDetails;
 import ua.in.petybay.service.IAdvertService;
 import ua.in.petybay.service.image.picasa.PicasaImageSaver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -45,6 +51,10 @@ public class MainController {
 
     @Autowired
     ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    private RegionRepository regionRepository;
+
 
 
     @RequestMapping(value = "/advert", method = RequestMethod.POST, produces = "text/plain")
@@ -385,5 +395,124 @@ public class MainController {
         }
 
         System.out.println("addCategory() category = " + category);
+    }
+
+    @RequestMapping(value = "/region", method = RequestMethod.GET)
+    public List<Region> findAllRegions(){
+        List<Region> regions =  regionRepository.findAll();
+        for (Region region : regions){
+            region.setCities(null);
+        }
+        return regions;
+    }
+
+    @RequestMapping(value = "/region/{name}", method = RequestMethod.GET)
+    public Region findAllRegions(@PathVariable("name") String name){
+        Region region = regionRepository.findOneByName(name);
+        return region;
+    }
+
+//    @RequestMapping(value = "/generateRegions", method = RequestMethod.GET)
+    public String generateRegions() throws Exception{
+        File fXmlFile = new File("ua-cities-google.xml");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(fXmlFile);
+
+        doc.getDocumentElement().normalize();
+
+        NodeList nList = doc.getElementsByTagName("region");
+
+        List<Region> regions = new LinkedList<Region>();
+
+        for (int temp = 0; temp < nList.getLength(); temp++) {
+
+            Node nNode = nList.item(temp);
+            NodeList childs = nNode.getChildNodes();
+
+
+                Element eElementRegion = (Element) nNode;
+                String regionNameRu = eElementRegion.getAttribute("name");
+                String regionNameUa = eElementRegion.getAttribute("nameUA");
+                String regionNameEn = eElementRegion.getAttribute("nameEN");
+
+            Title regiontitleRu = new Title();
+            regiontitleRu.setLanguage("ru");
+            regiontitleRu.setTitle(regionNameRu);
+
+            Title regiontitleUa = new Title();
+            regiontitleUa.setLanguage("ua");
+            regiontitleUa.setTitle(regionNameUa);
+
+            Title regiontitleEn = new Title();
+            regiontitleEn.setLanguage("en");
+            regiontitleEn.setTitle(regionNameEn);
+
+            List<Title> regiontitles = new LinkedList<>();
+            regiontitles.add(regiontitleEn);
+            regiontitles.add(regiontitleRu);
+            regiontitles.add(regiontitleUa);
+
+
+
+            List<City> cities = new LinkedList<City>();
+
+            Region region = new Region();
+            region.setName(regionNameEn.replaceAll("\\s+", ""));
+            region.setTitles(regiontitles);
+
+
+            for (int j = 0; j < childs.getLength(); j++) {
+                Node nNode2 = childs.item(j);
+                if (nNode2.getNodeType() == Node.ELEMENT_NODE) {
+
+                    City city = new City();
+
+                    Element eElement = (Element) nNode2;
+                    String cityNameRu = eElement.getAttribute("name");
+                    String cityNameUa = eElement.getAttribute("nameUA");
+                    String cityNameEn = eElement.getAttribute("nameEN");
+
+                    String lat = eElement.getAttribute("lat");
+                    String lon = eElement.getAttribute("lon");
+
+                    Title titleRu = new Title();
+                    titleRu.setLanguage("ru");
+                    titleRu.setTitle(cityNameRu);
+
+                    Title titleUa = new Title();
+                    titleUa.setLanguage("ua");
+                    titleUa.setTitle(cityNameUa);
+
+                    Title titleEn = new Title();
+                    titleEn.setLanguage("en");
+                    titleEn.setTitle(cityNameEn);
+
+                    List<Title> titles = new LinkedList<>();
+                    titles.add(titleEn);
+                    titles.add(titleRu);
+                    titles.add(titleUa);
+
+                    String cityName = cityNameEn.replaceAll("\\s+", "");
+                    city.setName(cityName);
+                    city.setTitles(titles);
+                    city.setLat(Double.parseDouble(lat));
+                    city.setLon(Double.parseDouble(lon));
+
+                    cities.add(city);
+                }
+            }
+
+
+            region.setCities(cities);
+
+            regions.add(region);
+        }
+
+        for (Region region : regions){
+            regionRepository.save(region);
+        }
+
+        return "regions generated";
     }
 }

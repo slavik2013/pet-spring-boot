@@ -13,6 +13,9 @@ public class City {
 
     List<Title> titles;
 
+    double lat;
+    double lon;
+
     public String getId() {
         return id;
     }
@@ -37,12 +40,30 @@ public class City {
         this.titles = titles;
     }
 
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
     @Override
     public String toString() {
         return "City{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", titles=" + titles +
+                ", lat=" + lat +
+                ", lon=" + lon +
                 '}';
     }
 }
