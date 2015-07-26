@@ -341,9 +341,35 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
         return getCategoryTitle(category, $cookies);
     };
 
-    $scope.getRegionName = function(region){
-        return getTitleByEntity(region, $cookies);
+    $scope.getEntityName = function(entity){
+        if (!entity)
+        return "";
+        return getTitleByEntity(entity, $cookies);
     };
+
+    $scope.getCities = function(region){
+        $scope.tempSelectedRegion = region;
+        $scope.selectedCity = undefined;
+        $scope.selectedRegion = undefined;
+        getCitiesByRegion($scope, $http, region.name)
+    };
+
+    $scope.citySelected = function(city){
+        $scope.selectedCity = city;
+        $scope.selectedRegion = $scope.tempSelectedRegion;
+        $scope.tempSelectedRegion = undefined;
+    };
+
+    $scope.toggled = function(open){
+        if (!open){
+            $scope.tempSelectedRegion = undefined;
+        }
+        if(open){
+            $scope.selectedCity = undefined;
+            $scope.selectedRegion = undefined;
+        }
+    }
+
 });
 
 
