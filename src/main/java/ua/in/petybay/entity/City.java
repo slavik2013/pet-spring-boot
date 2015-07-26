@@ -1,12 +1,17 @@
 package ua.in.petybay.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 
 /**
  * Created by slavik on 25.07.15.
  */
+@Document(collection = "city")
 public class City {
 
+    @Id
     String id;
 
     String name;
@@ -15,6 +20,8 @@ public class City {
 
     double lat;
     double lon;
+
+    String regionName;
 
     public String getId() {
         return id;
@@ -56,6 +63,14 @@ public class City {
         this.lon = lon;
     }
 
+    public String getRegionName() {
+        return regionName;
+    }
+
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
+    }
+
     @Override
     public String toString() {
         return "City{" +
@@ -64,6 +79,7 @@ public class City {
                 ", titles=" + titles +
                 ", lat=" + lat +
                 ", lon=" + lon +
+                ", regionName='" + regionName + '\'' +
                 '}';
     }
 }

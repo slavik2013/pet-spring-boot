@@ -7,29 +7,29 @@ import javax.validation.constraints.NotNull;
  */
 public class Location {
     @NotNull
-    String region;
+    Region region;
 
     @NotNull
-    String city;
+    City city;
 
     String detailAddress;
 
     public Location() {
     }
 
-    public String getRegion() {
+    public Region getRegion() {
         return region;
     }
 
-    public void setRegion(String region) {
+    public void setRegion(Region region) {
         this.region = region;
     }
 
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
     }
 
@@ -44,8 +44,8 @@ public class Location {
     @Override
     public String toString() {
         return "Location{" +
-                "region='" + region + '\'' +
-                ", city='" + city + '\'' +
+                "region=" + region +
+                ", city=" + city +
                 ", detailAddress='" + detailAddress + '\'' +
                 '}';
     }

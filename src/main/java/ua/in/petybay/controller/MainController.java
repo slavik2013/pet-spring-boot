@@ -16,6 +16,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ua.in.petybay.dao.CategoryRepository;
+import ua.in.petybay.dao.CityRepository;
 import ua.in.petybay.dao.RegionRepository;
 import ua.in.petybay.entity.*;
 import ua.in.petybay.security.SecUserDetails;
@@ -55,6 +56,8 @@ public class MainController {
     @Autowired
     private RegionRepository regionRepository;
 
+    @Autowired
+    private CityRepository cityRepository;
 
 
     @RequestMapping(value = "/advert", method = RequestMethod.POST, produces = "text/plain")
@@ -399,6 +402,7 @@ public class MainController {
 
     @RequestMapping(value = "/region", method = RequestMethod.GET)
     public List<Region> findAllRegions(){
+        System.out.println("findAllRegions()");
         List<Region> regions =  regionRepository.findAll();
         for (Region region : regions){
             region.setCities(null);
@@ -407,8 +411,10 @@ public class MainController {
     }
 
     @RequestMapping(value = "/region/{name}", method = RequestMethod.GET)
-    public Region findAllRegions(@PathVariable("name") String name){
+    public Region findRegionByName(@PathVariable("name") String name){
+        System.out.println("findRegionByName() name = " + name);
         Region region = regionRepository.findOneByName(name);
+        System.out.println("findRegionByName() region = " + region);
         return region;
     }
 
@@ -430,11 +436,10 @@ public class MainController {
             Node nNode = nList.item(temp);
             NodeList childs = nNode.getChildNodes();
 
-
-                Element eElementRegion = (Element) nNode;
-                String regionNameRu = eElementRegion.getAttribute("name");
-                String regionNameUa = eElementRegion.getAttribute("nameUA");
-                String regionNameEn = eElementRegion.getAttribute("nameEN");
+            Element eElementRegion = (Element) nNode;
+            String regionNameRu = eElementRegion.getAttribute("name");
+            String regionNameUa = eElementRegion.getAttribute("nameUA");
+            String regionNameEn = eElementRegion.getAttribute("nameEN");
 
             Title regiontitleRu = new Title();
             regiontitleRu.setLanguage("ru");
@@ -467,6 +472,7 @@ public class MainController {
                 if (nNode2.getNodeType() == Node.ELEMENT_NODE) {
 
                     City city = new City();
+                    city.setRegionName(regionNameEn.replaceAll("\\s+", ""));
 
                     Element eElement = (Element) nNode2;
                     String cityNameRu = eElement.getAttribute("name");
@@ -501,6 +507,10 @@ public class MainController {
 
                     cities.add(city);
                 }
+            }
+
+            for (City city : cities){
+                cityRepository.save(city);
             }
 
 

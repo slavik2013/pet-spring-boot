@@ -172,22 +172,20 @@
     <div class="form-group">
         <label class="control-label col-xs-3">Region</label>
         <div class="col-xs-8">
-            <select class="form-control" ng-model="advert.location.region">
-                <option>Kyiv</option>
-                <option>Lviv</option>
-                <option>Volyn</option>
-                <option>Vinnica</option>
+            <select class="form-control"
+                    ng-options="region.name as getRegionName(region) for region in regions track by region.name"
+                    ng-model="advert.location.region.name"
+                    ng-change="getCities()">
             </select>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" ng-show="advert.location.region.name">
         <label class="control-label col-xs-3">City</label>
         <div class="col-xs-8">
-            <select class="form-control" ng-model="advert.location.city">
-                <option>Irpin</option>
-                <option>Brovary</option>
-                <option>Gostomel</option>
+            <select class="form-control"
+                    ng-options="city.name as getCityName(city) for city in cities track by city.name"
+                    ng-model="advert.location.city.name">
             </select>
         </div>
     </div>

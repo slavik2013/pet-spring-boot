@@ -410,7 +410,75 @@ controllers.controller('ModalInstanceCtrl', function ($scope, $modalInstance, ca
 });
 
 
+function getRegions($scope, $http){
+    var req = {
+        method: 'GET',
+        url: '/api/region',
+        headers: {
+            'Content-Type': undefined
+        },
+        cache: true
+    };
+
+    $http(req).success(function(data){
+        $scope.regions = data;
+    }).error(function(){
+
+    });
+}
+
+function getTitleByEntity(entity, $cookies){
+    var currentLanguage = 'ru';
+    if($cookies.get('language'))
+        currentLanguage = $cookies.get('language');
+
+    var titles = entity.titles;
+
+    var name = {};
+    for(var i = 0; i < titles.length; i++){
+        var title = titles[i];
+        if (title.language == currentLanguage) {
+            name = title.title;
+            break;
+        }
+    }
+    return name;
+}
+
+function getCitiesByRegion($scope, $http, regionName){
+    var req = {
+        method: 'GET',
+        url: '/api/region/' + regionName,
+        headers: {
+            'Content-Type': undefined
+        },
+        cache: true
+    };
+
+    $http(req).success(function(data){
+        alert("getCitiesByRegion()");
+        $scope.cities = data.cities;
+    }).error(function(){
+
+    });
+}
+
 controllers.controller('addadvertController', function ($scope, $http, $location, $modal, FileUploader, $cookies) {
+
+    getRegions($scope, $http);
+
+    $scope.getRegionName = function(region){
+        return getTitleByEntity(region,$cookies);
+    };
+
+    $scope.getCities = function(){
+        alert("getCities region = " + $scope.advert.location.region.name);
+        getCitiesByRegion($scope, $http, $scope.advert.location.region.name);
+    };
+
+    $scope.getCityName = function(city){
+        return getTitleByEntity(city, $cookies);
+    };
 
     var uploader = $scope.uploader = new FileUploader({
         url: 'api/saveimage',
