@@ -456,7 +456,6 @@ function getCitiesByRegion($scope, $http, regionName){
     };
 
     $http(req).success(function(data){
-        alert("getCitiesByRegion()");
         $scope.cities = data.cities;
     }).error(function(){
 
@@ -472,7 +471,6 @@ controllers.controller('addadvertController', function ($scope, $http, $location
     };
 
     $scope.getCities = function(){
-        alert("getCities region = " + $scope.advert.location.region.name);
         getCitiesByRegion($scope, $http, $scope.advert.location.region.name);
     };
 
