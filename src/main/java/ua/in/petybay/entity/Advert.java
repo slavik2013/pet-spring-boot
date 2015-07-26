@@ -29,16 +29,21 @@ public class Advert {
 
     @DBRef
     @NotNull
+    @Size(max = 5)
     private List<Category> categories;
 
     @NotNull
     @Valid
     private Location location;
+
+    @Valid
     private Price price;
 
     private Date publicationDate;
+
     @Size(min = 50, max = 4095)
     private String description;
+
     @NotNull
     @Size(min = 5, max = 70)
     private String title;

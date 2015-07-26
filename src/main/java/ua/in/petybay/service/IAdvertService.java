@@ -35,4 +35,9 @@ public interface IAdvertService {
     Advert findOne(String id);
 
     List<Advert> findAll();
+
+    List<Advert> findByRegionNameAndState(String regionName, Advert.STATE state, Pageable pageable);
+
+    List<Advert> findByCityNameAndState(String cityName, Advert.STATE state, Pageable pageable);
+
 }

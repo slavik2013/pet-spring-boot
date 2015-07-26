@@ -113,4 +113,14 @@ public class AdvertService implements IAdvertService {
     public List<Advert> findAll(){
         return advertRepository.findAll();
     }
+
+    @Override
+    public List<Advert> findByRegionNameAndState(String regionName, Advert.STATE state, Pageable pageable){
+        return mongoOperations.find(Query.query(Criteria.where("location.region.name").is(regionName).and("state").is(state)).skip(pageable.getOffset()).limit(pageable.getPageSize()), Advert.class);
+    }
+
+    @Override
+    public List<Advert> findByCityNameAndState(String cityName, Advert.STATE state, Pageable pageable){
+        return mongoOperations.find(Query.query(Criteria.where("location.city.name").is(cityName).and("state").is(state)).skip(pageable.getOffset()).limit(pageable.getPageSize()), Advert.class);
+    }
 }

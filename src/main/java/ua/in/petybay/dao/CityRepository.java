@@ -7,4 +7,5 @@ import ua.in.petybay.entity.City;
  * Created by slavik on 26.07.15.
  */
 public interface CityRepository extends MongoRepository<City, String> {
+    City findOneByName(String name);
 }

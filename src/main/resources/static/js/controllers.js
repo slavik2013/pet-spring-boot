@@ -416,6 +416,10 @@ controllers.controller('advertlistController', function ($scope, $routeParams, $
         $location.path("/advertlist/" + $scope.requestCategory + "/page/" + $scope.currentPage);
         //getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage)
     };
+
+    $scope.getEntityName = function(entity){
+        return getTitleByEntity(entity, $cookies);
+    }
 });
 
 
@@ -698,9 +702,13 @@ function getPetById($scope, $http, advertId){
     });
 }
 
-controllers.controller('advertController', function ($scope, $routeParams, $http){
+controllers.controller('advertController', function ($scope, $routeParams, $http, $cookies){
     //alert("advertId = " + $routeParams.advertId);
     getPetById($scope, $http, $routeParams.advertId);
+
+    $scope.getEntityName = function(entity){
+        return getTitleByEntity(entity, $cookies);
+    }
 });
 
 

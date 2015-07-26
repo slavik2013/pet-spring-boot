@@ -1,6 +1,7 @@
 package ua.in.petybay.entity;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 /**
  * Created by slavik on 05.04.15.
@@ -8,7 +9,7 @@ import javax.validation.constraints.Max;
 
 public class Price {
 
-    @Max(1000000000)
+    @Min(0) @Max(1000000000)
     int price;
     String free;
     String currency;

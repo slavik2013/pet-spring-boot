@@ -6,7 +6,7 @@
                 <h3 class="advert_head_title">{{advertSingle.title}}</h3>
                 <div class="margine_top_10">
                     <span class="map_small vertical_align_middle display_inline_block"></span>
-                    <span class="map_small_text color_black margin_left_6 grey_border_right padding_right_10">{{advertSingle.location.city}}, {{advertSingle.location.region}}</span>
+                    <span class="map_small_text color_black margin_left_6 grey_border_right padding_right_10">{{getEntityName(advertSingle.location.city)}}, {{getEntityName(advertSingle.location.region)}}</span>
                     <span class="head_title_added_small_text margin_left_10">
                         {{ 'ADDED' | translate }}: {{ 'IN' | translate }} {{advertSingle.publicationDate | milisecondsToDateTime | date:'HH:mm , dd/MM/yyyy'}}, {{ 'NUMBER' | translate }}: {{advertSingle.id}} </span>
                 </div>
@@ -91,7 +91,7 @@
                     </div>
 
                     <div class="col-xs-11 col-sm-10 font_size_12 block">
-                        {{advertSingle.location.city}}, {{advertSingle.location.region}}
+                        {{getEntityName(advertSingle.location.city)}}, {{getEntityName(advertSingle.location.region)}}
                         <br/>
                         <span class=""><a href="">{{ 'SHOW_ON_MAP' | translate }}</a></span>
                     </div>

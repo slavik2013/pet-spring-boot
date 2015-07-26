@@ -75,12 +75,14 @@ public class MainController {
 
         boolean isUserAuthenticated = (authentication != null && authentication.isAuthenticated());
 
-        if (isUserAuthenticated){
-            advert.setState(Advert.STATE.ACTIVE);
-        } else
-        {
-            advert.setState(Advert.STATE.WAITING);
-        }
+//        if (isUserAuthenticated){
+//            advert.setState(Advert.STATE.ACTIVE);
+//        } else
+//        {
+//            advert.setState(Advert.STATE.WAITING);
+//        }
+
+        advert.setState(Advert.STATE.ACTIVE);
 
         advert.calculateAndSetPublicationDate();
 
@@ -93,7 +95,21 @@ public class MainController {
         advert.setIpAddress(ipAddress);
 
         List<Category> categories = advertService.addCategoriesToNewAdvert(advert);
+
+        Location location = advert.getLocation();
+        Region region = location.getRegion();
+        City city = location.getCity();
+
+        region = regionRepository.findOneByName(region.getName());
+        city = cityRepository.findOneByName(city.getName());
+
+        location.setRegion(region);
+        location.setCity(city);
+
+        advert.setLocation(location);
+
         advertService.save(advert);
+
         for (Category category : categories){
             if (isUserAuthenticated) {
                 category.setCountActive(category.getCountActive() + 1);
@@ -120,7 +136,8 @@ public class MainController {
     /* get user adverts by state. The path must be like /user/adverts/{adState} but because of error
       which appears in angularJS when $http(request) called, was decided to left /text/{adState}. In
      future investigation of this problem must be done and fixed.
-     I found out the problem. Such behaviour was because of installed AdBlock plugin. It filters all requests
+
+        !!! I found out the problem. Such behaviour was because of installed AdBlock plugin. It filters all requests
      which have 'ad' keyword or similar.
     */
     @Secured({"ROLE_USER"})
@@ -160,16 +177,16 @@ public class MainController {
         return advert;
     }
 
-    @RequestMapping(value = "/advert/category/{category}", method = RequestMethod.GET, produces = "application/json")
-    public List<Advert> getAdvertsByCategory(@PathVariable("category") String category){
-        System.out.println("getAdvertByCategory() category = " + category);
-        List<Advert> adverts = null;
-        if(category != null && !"".equals(category)){
-            adverts = advertService.findByCategoryName(category);
-            adverts = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE);
-        }
-        return adverts;
-    }
+//    @RequestMapping(value = "/advert/category/{category}", method = RequestMethod.GET, produces = "application/json")
+//    public List<Advert> getAdvertsByCategory(@PathVariable("category") String category){
+//        System.out.println("getAdvertByCategory() category = " + category);
+//        List<Advert> adverts = null;
+//        if(category != null && !"".equals(category)){
+//            adverts = advertService.findByCategoryName(category);
+//            adverts = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE);
+//        }
+//        return adverts;
+//    }
 
     @RequestMapping(value = "/advert/category/{category}/page/{page}", method = RequestMethod.GET, produces = "application/json")
     public List<Advert> getAdsByCategoryByPage(@PathVariable("category") String category,
@@ -190,7 +207,6 @@ public class MainController {
                                                @PathVariable("page") int page){
         System.out.println("getAdvertsByCategoryByPage() category = " + category + " ; page = " + page);
 
-
         List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 5));
 
         System.out.println("getAdvertsByCategoryByPage() advertList.size() = " + advertList.size());
@@ -201,7 +217,13 @@ public class MainController {
     @RequestMapping(value = "/advert/category/{category}/page/{page}/itemsperpage/{itemsperpage}", method = RequestMethod.GET, produces = "application/json")
     public List<Advert> getAdsByCategoryByPageByItemsPerPage(@PathVariable("category") String category,
                                             @PathVariable("page") int page,
-                                            @PathVariable("itemsperpage") int itemsPerPage){
+                                            @PathVariable("itemsperpage") int itemsPerPage) throws Exception{
+
+        if( itemsPerPage > 100 || itemsPerPage < 1)
+            throw new Exception("itemsPerPage could not be more than 40 and less then 1");
+        if ( page > 500 || page < 1)
+            throw new Exception("page number could not be more than 500 and less then 1");
+
         System.out.println("getAdsByCategoryByPageByItemsPerPage() category = " + category + " ; page = " + page + " ; itemsPerPage = " + itemsPerPage);
 
         List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
@@ -215,7 +237,13 @@ public class MainController {
     public List<Advert> getAdsByCategoryByPageByItemsPerPage(@PathVariable("category") String category,
                                                              @PathVariable("subcategory") String subcategory,
                                                              @PathVariable("page") int page,
-                                                             @PathVariable("itemsperpage") int itemsPerPage){
+                                                             @PathVariable("itemsperpage") int itemsPerPage) throws Exception{
+
+        if( itemsPerPage > 100 || itemsPerPage < 1)
+            throw new Exception("itemsPerPage could not be more than 40 and less then 1");
+        if ( page > 500 || page < 1)
+            throw new Exception("page number could not be more than 500 and less then 1");
+
         System.out.println("getAdsByCategoryByPageByItemsPerPage() category = " + category + " ; page = " + page + " ; itemsPerPage = " + itemsPerPage);
 
         List<Advert> advertList = advertService.findByCategoryNameAndState(subcategory, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
@@ -416,6 +444,32 @@ public class MainController {
         Region region = regionRepository.findOneByName(name);
         System.out.println("findRegionByName() region = " + region);
         return region;
+    }
+
+    @RequestMapping(value = "/advert/region/{regionName}", method = RequestMethod.GET)
+    public List<Advert> findAdvertsByRegion(@PathVariable("regionName") String regionName,
+                                     @RequestParam(value = "page", defaultValue = "1") int page,
+                                     @RequestParam(value = "itemsPerPage", defaultValue = "40") int itemsPerPage) throws Exception{
+
+        if( itemsPerPage > 100 || itemsPerPage < 1)
+            throw new Exception("itemsPerPage could not be more than 40 and less then 1");
+        if ( page > 500 || page < 1)
+            throw new Exception("page number could not be more than 500 and less then 1");
+
+       return  advertService.findByRegionNameAndState(regionName, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
+    }
+
+    @RequestMapping(value = "/advert/city/{cityName}", method = RequestMethod.GET)
+    public List<Advert> findAdvertsByCity(@PathVariable("cityName") String cityName,
+                                     @RequestParam(value = "page", defaultValue = "1") int page,
+                                     @RequestParam(value = "itemsPerPage", defaultValue = "40") int itemsPerPage) throws Exception {
+
+        if( itemsPerPage > 100 || itemsPerPage < 1)
+            throw new Exception("itemsPerPage could not be more than 40 and less then 1");
+        if ( page > 500 || page < 1)
+            throw new Exception("page number could not be more than 500 and less then 1");
+
+        return  advertService.findByCityNameAndState(cityName, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
     }
 
 //    @RequestMapping(value = "/generateRegions", method = RequestMethod.GET)
