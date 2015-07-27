@@ -1,7 +1,7 @@
 /**
  * Created by slavik on 04.04.15.
  */
-var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap','ngTable','ngResource','pascalprecht.translate', 'ngCookies']);
+var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap','ngTable','ngResource','pascalprecht.translate', 'ngCookies','ngStorage']);
 
 controllers.filter('milisecondsToDateTime', [function() {
     return function(seconds) {
@@ -325,7 +325,7 @@ function getCategoryTitle(category, $cookies){
 }
 
 
-controllers.controller('mainController', function ($scope, $routeParams, $http, $location, $cookies) {
+controllers.controller('mainController', function ($scope, $routeParams, $http, $location, $cookies, $localStorage) {
 
     getTopCategoriesList($scope, $http);
     getRegions($scope, $http);
@@ -358,6 +358,9 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
         $scope.selectedCity = city;
         $scope.selectedRegion = $scope.tempSelectedRegion;
         $scope.tempSelectedRegion = undefined;
+
+        $localStorage.selectedCity = $scope.selectedCity;
+
     };
 
     $scope.toggled = function(open){
@@ -373,8 +376,8 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
 });
 
 
-controllers.controller('advertlistController', function ($scope, $routeParams, $http, $location, $cookies) {
-
+controllers.controller('advertlistController', function ($scope, $routeParams, $http, $location, $cookies,$localStorage) {
+    
     $scope.adverts = {};
     //getPets($scope, $http, $routeParams.category);
 
