@@ -329,7 +329,7 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
 
     getTopCategoriesList($scope, $http);
     getRegions($scope, $http);
-    $scope.currentCategory = {};
+    $scope.currentCategory = undefined;
     $scope.changeCategory = function(category){
         if ($scope.currentCategory == category)
             $scope.currentCategory = undefined;
@@ -371,15 +371,32 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
             $scope.selectedCity = undefined;
             $scope.selectedRegion = undefined;
         }
+    };
+
+    $scope.selectCategory = function(category){
+        $localStorage.selectedCategory = category;
     }
 
 });
 
+function findCategoryBycategoryName(category, categoryName){
+    if (category.name == categoryName)
+        return category;
+    if (category.childs) {
+        var categories = category.childs;
+        for (var i = 0; i < categories.length; i++) {
+            var localCategory = findCategoryBycategoryName(categories[i], categoryName);
+            if (localCategory) {
+                return localCategory;
+            }
+        }
+    }
+    return null;
+}
 
-controllers.controller('advertlistController', function ($scope, $routeParams, $http, $location, $cookies,$localStorage) {
-    
+controllers.controller('advertlistController', function ($scope, $routeParams, $http, $location, $cookies, $localStorage) {
+
     $scope.adverts = {};
-    //getPets($scope, $http, $routeParams.category);
 
     $scope.itemsPerPageSelectList = [5, 10, 20, 40];
 
@@ -398,10 +415,57 @@ controllers.controller('advertlistController', function ($scope, $routeParams, $
     $cookies.put('itemsPerPage', $scope.itemsPerPage);
 
     $scope.requestCategory = $routeParams.category;
-    if ($routeParams.subcategory)
-        $scope.requestCategory = $routeParams.category  + "/" + $routeParams.subcategory;
+    $scope.requestCategoryForServer = $routeParams.category;
+    if ($routeParams.subcategory) {
+        $scope.requestCategoryForServer = $routeParams.subcategory;
+        $scope.requestCategory = $scope.requestCategory + "/" + $routeParams.subcategory;
+    }
 
-    getAdsCountByCategoryByPage($scope, $http, $scope.requestCategory);
+    if ($routeParams.subcategory2){
+        $scope.requestCategoryForServer = $routeParams.subcategory2;
+        $scope.requestCategory = $scope.requestCategory  + "/" + $routeParams.subcategory2;
+    }
+
+    if ($routeParams.subcategory3){
+        $scope.requestCategoryForServer = $routeParams.subcategory3;
+        $scope.requestCategory = $scope.requestCategory  + "/" + $routeParams.subcategory3;
+    }
+
+
+    var req = {
+        method: 'GET',
+        url: 'api/topcategory',
+        headers: {
+            'Content-Type': undefined
+        },
+        cache: true
+    };
+
+    $http(req).success(function(data){
+        $scope.categoriesList = data;
+
+        for (var i = 0; i < $scope.categoriesList.length; i++){
+            var findedCategory = findCategoryBycategoryName($scope.categoriesList[i], $scope.requestCategoryForServer);
+            if (findedCategory) {
+                $localStorage.selectedCategory = findedCategory;
+                break;
+            }
+        }
+
+        if ($localStorage.selectedCategory && $localStorage.selectedCategory.childs){
+            $scope.selectedCategory = $localStorage.selectedCategory;
+        }
+    }).error(function(){
+
+    });
+
+
+
+    if ($localStorage.selectedCategory && $localStorage.selectedCategory.childs){
+        $scope.selectedCategory = $localStorage.selectedCategory;
+    }
+
+    getAdsCountByCategoryByPage($scope, $http, $scope.requestCategoryForServer);
 
 
     $scope.itemsPerPageListener = function(){
@@ -409,7 +473,7 @@ controllers.controller('advertlistController', function ($scope, $routeParams, $
         $location.path("/advertlist/" + $scope.requestCategory);
     };
 
-    getAdsByCategoryByPage($scope, $http, $scope.requestCategory, $scope.currentPage, $scope.itemsPerPage);
+    getAdsByCategoryByPage($scope, $http, $scope.requestCategoryForServer, $scope.currentPage, $scope.itemsPerPage);
 
     $scope.setPage = function (pageNo) {
         $scope.currentPage = pageNo;
@@ -422,6 +486,10 @@ controllers.controller('advertlistController', function ($scope, $routeParams, $
 
     $scope.getEntityName = function(entity){
         return getTitleByEntity(entity, $cookies);
+    };
+
+    $scope.selectCategory = function(category){
+        $localStorage.selectedCategory = category;
     }
 });
 

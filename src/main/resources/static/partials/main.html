@@ -35,8 +35,15 @@
         <div class="row">
 
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 margin_bottom_10" ng-show="currentCategory">
+                <div class="col-xs-12">
+                <a href="#/advertlist/{{currentCategory.name}}" ng-click="selectCategory(currentCategory)">
+                    <h4>
+                        View all adverts in {{getCategoryName(currentCategory)}}
+                    </h4>
+                </a>
+                </div>
                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 border" ng-repeat="subcategory in currentCategory.childs">
-                    <a href="#/advertlist/{{currentCategory.name}}/{{subcategory.name}}">
+                    <a href="#/advertlist/{{currentCategory.name}}/{{subcategory.name}}" ng-click="selectCategory(subcategory)">
                         <strong>
                             {{getCategoryName(subcategory)}}
                         </strong>
