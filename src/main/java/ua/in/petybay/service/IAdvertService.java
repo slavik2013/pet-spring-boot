@@ -40,4 +40,6 @@ public interface IAdvertService {
 
     List<Advert> findByCityNameAndState(String cityName, Advert.STATE state, Pageable pageable);
 
+    List<Advert> findByRegionNameAndCityNameAndState(String regionName, String cityName, Advert.STATE state, Pageable pageable);
+
 }

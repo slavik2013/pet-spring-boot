@@ -233,6 +233,22 @@ function getAdsByCategoryByPage($scope, $http, category, page, itemsPerPage){
     });
 }
 
+function getAdsByRegionByCityByPage($scope, $http, region, city, page, itemsPerPage){
+    var req = {
+        method: 'GET',
+        url: 'api/advert/region/'+region+"/city/"+city,
+        params: {page: page, itemsPerPage:itemsPerPage},
+        headers: {
+            'Content-Type': undefined
+        }
+    };
+
+    $http(req).success(function(data){
+        $scope.adverts = data;
+    }).error(function(){
+    });
+}
+
 function getAdsCountByCategoryByPage($scope, $http, category){
     var requestCount = {
         method: 'GET',
@@ -263,7 +279,7 @@ function getAdsCountByCategoryByPage($scope, $http, category){
 }
 
 
-function userLogout($scope, $http, $window){
+function userLogout($scope, $http, $window, $localStorage){
     var req = {
         method: 'GET',
         url: '/logout',
@@ -273,17 +289,18 @@ function userLogout($scope, $http, $window){
     };
 
     $http(req).success(function(data){
-
+        //$localStorage.isAuthenticated = undefined;
     }).error(function(){
 
     });
     $scope.authenticatedUser = undefined;
     $window.location.href = '/';
+    //$window.location.reload();
 }
 
 controllers.controller('loginUserController', function ($scope, $http, $translate, $window, $cookies, $route, $localStorage){
     //alert("get user");
-    if ($localStorage.isAuthinticated)
+    //if ($localStorage.isAuthenticated)
         getUser($scope, $http);
 
     $scope.status = {
@@ -303,7 +320,7 @@ controllers.controller('loginUserController', function ($scope, $http, $translat
     };
 
     $scope.userLogout = function(){
-        userLogout($scope, $http, $window);
+        userLogout($scope, $http, $window, $localStorage);
     }
 });
 
@@ -330,6 +347,14 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
 
     getTopCategoriesList($scope, $http);
     getRegions($scope, $http);
+
+    if ($localStorage.selectedRegion){
+        $scope.selectedRegion =$localStorage.selectedRegion;
+    }
+    if ($localStorage.selectedCity){
+        $scope.selectedCity = $localStorage.selectedCity;
+    }
+
     $scope.currentCategory = undefined;
     $scope.changeCategory = function(category){
         if ($scope.currentCategory == category)
@@ -376,8 +401,18 @@ controllers.controller('mainController', function ($scope, $routeParams, $http, 
 
     $scope.selectCategory = function(category){
         $localStorage.selectedCategory = category;
-    }
+    };
 
+    $scope.submitSearch = function(){
+        if ($scope.selectedRegion.name && $scope.selectedCity.name) {
+            $location.path('/advertlist').search({
+                'region': $scope.selectedRegion.name,
+                'city': $scope.selectedCity.name
+            });
+            $localStorage.selectedRegion = $scope.selectedRegion;
+            $localStorage.selectedCity = $scope.selectedCity;
+        }
+    }
 });
 
 function findCategoryBycategoryName(category, categoryName){
@@ -415,74 +450,86 @@ controllers.controller('advertlistController', function ($scope, $routeParams, $
 
     $cookies.put('itemsPerPage', $scope.itemsPerPage);
 
-    $scope.requestCategory = $routeParams.category;
-    $scope.requestCategoryForServer = $routeParams.category;
-    if ($routeParams.subcategory) {
-        $scope.requestCategoryForServer = $routeParams.subcategory;
-        $scope.requestCategory = $scope.requestCategory + "/" + $routeParams.subcategory;
+    if ($localStorage.selectedRegion){
+        $scope.selectedRegion =$localStorage.selectedRegion;
+    }
+    if ($localStorage.selectedCity){
+        $scope.selectedCity = $localStorage.selectedCity;
     }
 
-    if ($routeParams.subcategory2){
-        $scope.requestCategoryForServer = $routeParams.subcategory2;
-        $scope.requestCategory = $scope.requestCategory  + "/" + $routeParams.subcategory2;
-    }
-
-    if ($routeParams.subcategory3){
-        $scope.requestCategoryForServer = $routeParams.subcategory3;
-        $scope.requestCategory = $scope.requestCategory  + "/" + $routeParams.subcategory3;
-    }
-
-
-    var req = {
-        method: 'GET',
-        url: 'api/topcategory',
-        headers: {
-            'Content-Type': undefined
-        },
-        cache: true
-    };
-
-    $http(req).success(function(data){
-        $scope.categoriesList = data;
-
-        for (var i = 0; i < $scope.categoriesList.length; i++){
-            var findedCategory = findCategoryBycategoryName($scope.categoriesList[i], $scope.requestCategoryForServer);
-            if (findedCategory) {
-                $localStorage.selectedCategory = findedCategory;
-                break;
-            }
+    if ($routeParams.category) {
+        $scope.requestCategory = $routeParams.category;
+        $scope.requestCategoryForServer = $routeParams.category;
+        if ($routeParams.subcategory) {
+            $scope.requestCategoryForServer = $routeParams.subcategory;
+            $scope.requestCategory = $scope.requestCategory + "/" + $routeParams.subcategory;
         }
 
-        if ($localStorage.selectedCategory && $localStorage.selectedCategory.childs){
+        if ($routeParams.subcategory2) {
+            $scope.requestCategoryForServer = $routeParams.subcategory2;
+            $scope.requestCategory = $scope.requestCategory + "/" + $routeParams.subcategory2;
+        }
+
+        if ($routeParams.subcategory3) {
+            $scope.requestCategoryForServer = $routeParams.subcategory3;
+            $scope.requestCategory = $scope.requestCategory + "/" + $routeParams.subcategory3;
+        }
+
+
+        var req = {
+            method: 'GET',
+            url: 'api/topcategory',
+            headers: {
+                'Content-Type': undefined
+            },
+            cache: true
+        };
+
+        $http(req).success(function (data) {
+            $scope.categoriesList = data;
+
+            for (var i = 0; i < $scope.categoriesList.length; i++) {
+                var findedCategory = findCategoryBycategoryName($scope.categoriesList[i], $scope.requestCategoryForServer);
+                if (findedCategory) {
+                    $localStorage.selectedCategory = findedCategory;
+                    break;
+                }
+            }
+
+            if ($localStorage.selectedCategory && $localStorage.selectedCategory.childs) {
+                $scope.selectedCategory = $localStorage.selectedCategory;
+            }
+        }).error(function () {
+
+        });
+
+
+        if ($localStorage.selectedCategory && $localStorage.selectedCategory.childs) {
             $scope.selectedCategory = $localStorage.selectedCategory;
         }
-    }).error(function(){
-
-    });
 
 
+        getAdsCountByCategoryByPage($scope, $http, $scope.requestCategoryForServer);
+        getAdsByCategoryByPage($scope, $http, $scope.requestCategoryForServer, $scope.currentPage, $scope.itemsPerPage);
 
-    if ($localStorage.selectedCategory && $localStorage.selectedCategory.childs){
-        $scope.selectedCategory = $localStorage.selectedCategory;
+        $scope.pageChanged = function () {
+            $location.path("/advertlist/" + $scope.requestCategory + "/page/" + $scope.currentPage);
+            //getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage)
+        };
+    } else {
+        $scope.search = $location.search();
+
+        getAdsByRegionByCityByPage($scope, $http, $scope.search.region, $scope.search.city, $scope.currentPage, $scope.itemsPerPage);
+        //alert(JSON.stringify($scope.search));
     }
 
-    getAdsCountByCategoryByPage($scope, $http, $scope.requestCategoryForServer);
-
-
-    $scope.itemsPerPageListener = function(){
+    $scope.itemsPerPageListener = function () {
         $cookies.put('itemsPerPage', $scope.itemsPerPage);
         $location.path("/advertlist/" + $scope.requestCategory);
     };
 
-    getAdsByCategoryByPage($scope, $http, $scope.requestCategoryForServer, $scope.currentPage, $scope.itemsPerPage);
-
     $scope.setPage = function (pageNo) {
         $scope.currentPage = pageNo;
-    };
-
-    $scope.pageChanged = function() {
-        $location.path("/advertlist/" + $scope.requestCategory + "/page/" + $scope.currentPage);
-        //getAdsByCategoryByPage($scope, $http, $routeParams.category, $scope.currentPage, $scope.itemsPerPage)
     };
 
     $scope.getEntityName = function(entity){
@@ -791,7 +838,11 @@ controllers.controller('advertController', function ($scope, $routeParams, $http
 });
 
 
-controllers.controller('loginController', function ($scope, $routeParams, $http, $location, $window){
+controllers.controller('loginController', function ($scope, $routeParams, $http, $location, $window, $localStorage, $route){
+
+    //if($localStorage.isAuthenticated){
+    //    $location.path("/myaccount");
+    //}
 
     $scope.user = {};
     //$scope.authenticatedUserCache = $cacheFactory('userCache');
@@ -813,7 +864,12 @@ controllers.controller('loginController', function ($scope, $routeParams, $http,
             //$cookieStore.put('user', JSON.stringify(data));
             //$scope.authenticatedUserCache.put("user", JSON.stringify(data));
             //$location.path("/index");
+
+            //$localStorage.isAuthenticated = true;
             $window.location.href = '/';
+            //$window.location.reload();
+            //$location.path("/myaccount")
+
         }).error(function(data){
             $scope.loginError = "email or password is wrong"
         });

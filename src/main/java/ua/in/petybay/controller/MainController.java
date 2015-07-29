@@ -177,6 +177,14 @@ public class MainController {
         return advert;
     }
 
+
+//    @RequestMapping(value = "/advert/allcategory", method = RequestMethod.GET, produces = "application/json")
+//    public List<Advert> getAdvertsAllcategory(@RequestParam("region") String regionName,
+//                                              @RequestParam("city") String cityName){
+//        System.out.println("getAdvertsAllcategory() ");
+//        return null;
+//    }
+
 //    @RequestMapping(value = "/advert/category/{category}", method = RequestMethod.GET, produces = "application/json")
 //    public List<Advert> getAdvertsByCategory(@PathVariable("category") String category){
 //        System.out.println("getAdvertByCategory() category = " + category);
@@ -194,7 +202,7 @@ public class MainController {
         System.out.println("getAdvertsByCategoryByPage() category = " + category + " ; page = " + page);
 
 
-        List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 5));
+        List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 40));
 
         System.out.println("getAdvertsByCategoryByPage() advertList.size() = " + advertList.size());
 
@@ -203,11 +211,11 @@ public class MainController {
 
     @RequestMapping(value = "/advert/category/{category}/{subcategory}/page/{page}", method = RequestMethod.GET, produces = "application/json")
     public List<Advert> getAdsByCategoryBySubcategoryByPage(@PathVariable("category") String category,
-                                                            @PathVariable("category") String subcategory,
+                                                            @PathVariable("subcategory") String subcategory,
                                                @PathVariable("page") int page){
         System.out.println("getAdvertsByCategoryByPage() category = " + category + " ; page = " + page);
 
-        List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 5));
+        List<Advert> advertList = advertService.findByCategoryNameAndState(category, Advert.STATE.ACTIVE, new PageRequest(page - 1, 40));
 
         System.out.println("getAdvertsByCategoryByPage() advertList.size() = " + advertList.size());
 
@@ -479,6 +487,20 @@ public class MainController {
             throw new Exception("page number could not be more than 500 and less then 1");
 
         return  advertService.findByCityNameAndState(cityName, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
+    }
+
+    @RequestMapping(value = "/advert/region/{regionName}/city/{cityName}", method = RequestMethod.GET)
+    public List<Advert> findAdvertsByRegionByCity(@PathVariable("regionName") String regionName,
+                                                  @PathVariable("cityName") String cityName,
+                                                  @RequestParam(value = "page", defaultValue = "1") int page,
+                                                  @RequestParam(value = "itemsPerPage", defaultValue = "40") int itemsPerPage) throws Exception {
+
+        if( itemsPerPage > 100 || itemsPerPage < 1)
+            throw new Exception("itemsPerPage could not be more than 40 and less then 1");
+        if ( page > 500 || page < 1)
+            throw new Exception("page number could not be more than 500 and less then 1");
+
+        return  advertService.findByRegionNameAndCityNameAndState(regionName, cityName, Advert.STATE.ACTIVE, new PageRequest(page - 1, itemsPerPage));
     }
 
 //    @RequestMapping(value = "/generateRegions", method = RequestMethod.GET)

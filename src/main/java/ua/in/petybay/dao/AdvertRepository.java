@@ -1,5 +1,7 @@
 package ua.in.petybay.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import ua.in.petybay.entity.Advert;
 
@@ -23,4 +25,5 @@ public interface AdvertRepository extends MongoRepository<Advert, String> {
 //
 //    Long countByCategoryNameAndState(String categoryName, Advert.STATE state);
 
+    Page<Advert> findByLocationRegionNameAndLocationCityNameAndState(String regionName, String cityName, Advert.STATE state, Pageable pageable);
 }

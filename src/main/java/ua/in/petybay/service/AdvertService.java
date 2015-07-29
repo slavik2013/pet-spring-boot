@@ -1,6 +1,7 @@
 package ua.in.petybay.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -122,5 +123,12 @@ public class AdvertService implements IAdvertService {
     @Override
     public List<Advert> findByCityNameAndState(String cityName, Advert.STATE state, Pageable pageable){
         return mongoOperations.find(Query.query(Criteria.where("location.city.name").is(cityName).and("state").is(state)).skip(pageable.getOffset()).limit(pageable.getPageSize()), Advert.class);
+    }
+
+    @Override
+    public List<Advert> findByRegionNameAndCityNameAndState(String regionName, String cityName, Advert.STATE state, Pageable pageable) {
+//        return mongoOperations.find(Query.query(Criteria.where("location.city.name").is(cityName).and("state").is(state)).skip(pageable.getOffset()).limit(pageable.getPageSize()), Advert.class);
+        Page<Advert> adverts = advertRepository.findByLocationRegionNameAndLocationCityNameAndState(regionName, cityName, state, pageable);
+        return adverts.getContent();
     }
 }

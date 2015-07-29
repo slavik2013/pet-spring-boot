@@ -18,6 +18,10 @@ app.config(['$routeProvider',
                 templateUrl: 'partials/addadvert.html',
                 controller: 'addadvertController'
             }).
+            when('/advertlist', {
+                templateUrl: 'partials/advertlist.html',
+                controller: 'advertlistController'
+            }).
             when('/advertlist/:category', {
                 templateUrl: 'partials/advertlist.html',
                 controller: 'advertlistController'
