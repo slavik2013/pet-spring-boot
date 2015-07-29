@@ -10,33 +10,31 @@
                     <span class="head_title_added_small_text margin_left_10">
                         {{ 'ADDED' | translate }}: {{ 'IN' | translate }} {{advertSingle.publicationDate | milisecondsToDateTime | date:'HH:mm , dd/MM/yyyy'}}, {{ 'NUMBER' | translate }}: {{advertSingle.id}} </span>
                 </div>
-                <div class="ad_manipulation_buttons margine_top_15">
+                <!--<div class="ad_manipulation_buttons margine_top_15">-->
 
-                    <button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">
-                        <span class="manipulation_buttons_icon_top vertical_align_middle display_inline_block"></span>
-                        <span class="margin_left_6"><a href="">Разместить в топ</a></span>
-                    </button>
+                    <!--<button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">-->
+                        <!--<span class="manipulation_buttons_icon_top vertical_align_middle display_inline_block"></span>-->
+                        <!--<span class="margin_left_6"><a href="">Разместить в топ</a></span>-->
+                    <!--</button>-->
 
-                    <button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">
-                        <span class="manipulation_buttons_icon_make_urgently vertical_align_middle display_inline_block"></span>
-                        <span class="margin_left_6"><a href="">Сделать срочным</a></span>
+                    <!--<button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">-->
+                        <!--<span class="manipulation_buttons_icon_make_urgently vertical_align_middle display_inline_block"></span>-->
+                        <!--<span class="margin_left_6"><a href="">Сделать срочным</a></span>-->
 
-                    </button>
-                    <button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">
-                        <span class="manipulation_buttons_icon_select vertical_align_middle display_inline_block"></span>
-                        <span class="margin_left_6"><a href="">Выделить</a></span>
-                    </button>
-                    <button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">
-                        <span class="manipulation_buttons_icon_raise vertical_align_middle display_inline_block"></span>
-                        <span class="margin_left_6"><a href="">Поднять</a></span>
-                    </button>
-                </div>
+                    <!--</button>-->
+                    <!--<button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">-->
+                        <!--<span class="manipulation_buttons_icon_select vertical_align_middle display_inline_block"></span>-->
+                        <!--<span class="margin_left_6"><a href="">Выделить</a></span>-->
+                    <!--</button>-->
+                    <!--<button type="button" class="btn btn-default btn-md grey_background_f3 nopadding_top_bottom nomargin_top_bottom">-->
+                        <!--<span class="manipulation_buttons_icon_raise vertical_align_middle display_inline_block"></span>-->
+                        <!--<span class="margin_left_6"><a href="">Поднять</a></span>-->
+                    <!--</button>-->
+                <!--</div>-->
             </div>
             <div class="advert_main_container">
 
             <div class="thumbnail">
-                <!--<img src="http://img02.olx.ua/images_slandocomua/206477299_2_1000x700_zamechatelnye-schenochki-yorkshirskogo-terera-fotografii_rev001.jpg">-->
-                 <!--<img src="http://gestionbroker.ru/mobile_landing/images/screenshots/plane.jpg" style="max-height: 400px">-->
 
                 <img ng-src={{advertSingle.imageEntity[0].htmlLink}}>
             </div>
@@ -44,8 +42,7 @@
                     {{advertSingle.description}}
                 </div>
             <div class="thumbnail" ng-repeat="singleImageEntity in advertSingle.imageEntity.slice(1,advertSingle.imageEntity.length)">
-                <!--<img src="http://img02.olx.ua/images_slandocomua/206477299_2_1000x700_zamechatelnye-schenochki-yorkshirskogo-terera-fotografii_rev001.jpg">-->
-                <!--<img src="http://gestionbroker.ru/mobile_landing/images/screenshots/plane.jpg">-->
+
                 <img ng-src={{singleImageEntity.htmlLink}}>
             </div>
                 <div class="margin_bottom_10">
