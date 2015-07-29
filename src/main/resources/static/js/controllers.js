@@ -569,7 +569,7 @@ function getCitiesByRegion($scope, $http, regionName){
     };
 
     $http(req).success(function(data){
-        $scope.cities = data.cities;
+        $scope.cities = data;
     }).error(function(){
 
     });
