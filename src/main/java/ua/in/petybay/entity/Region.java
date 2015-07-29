@@ -26,4 +26,6 @@ public class Region {
     @DBRef
     private List<City> cities;
 
+    private List<String> citiesNames;
+
 }

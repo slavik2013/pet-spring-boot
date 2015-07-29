@@ -446,6 +446,15 @@ public class MainController {
         return region;
     }
 
+    @RequestMapping(value = "/cities/region/{name}", method = RequestMethod.GET)
+    public List<City> findCitiesByRegionByName(@PathVariable("name") String name){
+        System.out.println("findCitiesByRegionByName() name = " + name);
+
+        List<City> cities = cityRepository.findByRegionName(name);
+        System.out.println("findCitiesByRegionByName() cities.size = " + cities.size());
+        return cities;
+    }
+
     @RequestMapping(value = "/advert/region/{regionName}", method = RequestMethod.GET)
     public List<Advert> findAdvertsByRegion(@PathVariable("regionName") String regionName,
                                      @RequestParam(value = "page", defaultValue = "1") int page,
@@ -515,6 +524,7 @@ public class MainController {
 
 
             List<City> cities = new LinkedList<City>();
+            List<String> citiesNames = new ArrayList<>();
 
             Region region = new Region();
             region.setName(regionNameEn.replaceAll("\\s+", ""));
@@ -560,6 +570,8 @@ public class MainController {
                     city.setLon(Double.parseDouble(lon));
 
                     cities.add(city);
+
+                    citiesNames.add(city.getName());
                 }
             }
 
@@ -568,7 +580,8 @@ public class MainController {
             }
 
 
-            region.setCities(cities);
+//            region.setCities(cities);
+//            region.setCitiesNames(citiesNames);
 
             regions.add(region);
         }

@@ -490,7 +490,7 @@ controllers.controller('advertlistController', function ($scope, $routeParams, $
 
     $scope.selectCategory = function(category){
         $localStorage.selectedCategory = category;
-    }
+    };
 
     $scope.getSmallImageLink = function(link, maxSize){
         maxSize = 300;
@@ -561,7 +561,7 @@ function getTitleByEntity(entity, $cookies){
 function getCitiesByRegion($scope, $http, regionName){
     var req = {
         method: 'GET',
-        url: '/api/region/' + regionName,
+        url: '/api/cities/region/' + regionName,
         headers: {
             'Content-Type': undefined
         },
