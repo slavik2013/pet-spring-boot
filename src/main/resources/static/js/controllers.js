@@ -1,7 +1,7 @@
 /**
  * Created by slavik on 04.04.15.
  */
-var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap','ngTable','ngResource','pascalprecht.translate', 'ngCookies','ngStorage']);
+var controllers = angular.module('controllers', ['angularFileUpload', 'ui.bootstrap','ngResource','pascalprecht.translate', 'ngCookies','ngStorage']);
 
 controllers.filter('milisecondsToDateTime', [function() {
     return function(seconds) {
@@ -281,9 +281,10 @@ function userLogout($scope, $http, $window){
     $window.location.href = '/';
 }
 
-controllers.controller('loginUserController', function ($scope, $http, $translate, $window, $cookies,$route){
+controllers.controller('loginUserController', function ($scope, $http, $translate, $window, $cookies, $route, $localStorage){
     //alert("get user");
-    getUser($scope, $http);
+    if ($localStorage.isAuthinticated)
+        getUser($scope, $http);
 
     $scope.status = {
         isopen: false
@@ -936,7 +937,7 @@ function viewAdvert($location, advertId){
     $location.path("/advert/" + advertId);
 }
 
-controllers.controller('accountController', function ($scope, $routeParams, $http, $location, NgTableParams, $resource){
+controllers.controller('accountController', function ($scope, $routeParams, $http, $location, $resource){
 
 
     $scope.adverts = {};
