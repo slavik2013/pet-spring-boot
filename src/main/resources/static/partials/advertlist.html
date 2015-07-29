@@ -16,14 +16,10 @@
 
 <div class="margin_bottom_10" ng-show="selectedCategory">
     <div class="row" >
-        <div class="col-lg-3 col-md-3 col-sm-3" ng-repeat="category in selectedCategory.childs">
-
+        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" ng-repeat="category in selectedCategory.childs">
             <a href="#/advertlist/{{requestCategory}}/{{category.name}}" ng-click="selectCategory(category)">
-                <h5>
                     {{getEntityName(category)}}
-                </h5>
             </a>
-
         </div>
     </div>
 </div>
