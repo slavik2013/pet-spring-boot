@@ -491,6 +491,14 @@ controllers.controller('advertlistController', function ($scope, $routeParams, $
     $scope.selectCategory = function(category){
         $localStorage.selectedCategory = category;
     }
+
+    $scope.getSmallImageLink = function(link, maxSize){
+        maxSize = 300;
+        var lastSlashIndex = link.lastIndexOf('/');
+        var maxSize = '/s' + maxSize;
+        var resultLink = link.substring(0, lastSlashIndex) + maxSize + link.substring(lastSlashIndex, link.length);
+        return resultLink;
+    }
 });
 
 
@@ -512,7 +520,6 @@ controllers.controller('ModalInstanceCtrl', function ($scope, $modalInstance, ca
     $scope.getCategoryName = function(category){
         return getCategoryTitle(category, $cookies);
     };
-
 });
 
 
