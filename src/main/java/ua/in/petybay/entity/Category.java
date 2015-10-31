@@ -6,6 +6,9 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
@@ -13,6 +16,8 @@ import java.util.List;
  */
 @Document(collection = "category")
 @Data
+@XmlRootElement(name = "category")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Category {
 
     @Transient
@@ -27,14 +32,11 @@ public class Category {
     private long countActive;
     private long countNonActive;
     private long countWaiting;
-
     int level;
-
     private String parent;
 
     @DBRef
     private List<Category> childs;
-
     int displayOrder;
 
 }

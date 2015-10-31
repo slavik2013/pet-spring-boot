@@ -65,6 +65,10 @@ public class AdvertService implements IAdvertService {
         }
 
 
+        Criteria criteria = Criteria.where("childs").in(category);
+
+
+
         advert.setCategories(categories);
 
         return categories;
