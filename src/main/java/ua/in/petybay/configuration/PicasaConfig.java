@@ -35,19 +35,20 @@ public class PicasaConfig {
 
     @Bean
     public GoogleCredential credential() throws Exception {
-            Scanner scanner = new Scanner(new FileInputStream(FILE_NAME));
-
-            String refreshToken = scanner.nextLine();
-            String accessToken = scanner.nextLine();
-
-            GoogleCredential credential = new GoogleCredential.Builder()
-                    .setClientSecrets(CLIENT_ID, CLIENT_SECRET)
-                    .setJsonFactory(new JacksonFactory()).setTransport(new NetHttpTransport()).build()
-                    .setRefreshToken(refreshToken).setAccessToken(accessToken);
-
-            credential.refreshToken();
-            String newAccessToken = credential.getAccessToken();
-            FileUtil.saveAccessToken(newAccessToken);
-            return credential;
+//            Scanner scanner = new Scanner(new FileInputStream(FILE_NAME));
+//
+//            String refreshToken = scanner.nextLine();
+//            String accessToken = scanner.nextLine();
+//
+//            GoogleCredential credential = new GoogleCredential.Builder()
+//                    .setClientSecrets(CLIENT_ID, CLIENT_SECRET)
+//                    .setJsonFactory(new JacksonFactory()).setTransport(new NetHttpTransport()).build()
+//                    .setRefreshToken(refreshToken).setAccessToken(accessToken);
+//
+//            credential.refreshToken();
+//            String newAccessToken = credential.getAccessToken();
+//            FileUtil.saveAccessToken(newAccessToken);
+//            return credential;
+        return null;
     }
 }

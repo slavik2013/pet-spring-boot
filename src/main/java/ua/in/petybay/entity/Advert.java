@@ -1,6 +1,5 @@
 package ua.in.petybay.entity;
 
-import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,7 +16,6 @@ import java.util.List;
  * Created by slavik on 31.03.15.
  */
 @Document(collection="advert")
-@Data
 public class Advert {
 
     public static enum STATE{
@@ -76,4 +74,131 @@ public class Advert {
         this.setPublicationDate(new Date(cal.getTime().getTime()));
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Price getPrice() {
+        return price;
+    }
+
+    public void setPrice(Price price) {
+        this.price = price;
+    }
+
+    public Date getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<ImageEntity> getImageEntity() {
+        return imageEntity;
+    }
+
+    public void setImageEntity(List<ImageEntity> imageEntity) {
+        this.imageEntity = imageEntity;
+    }
+
+    public STATE getState() {
+        return state;
+    }
+
+    public void setState(STATE state) {
+        this.state = state;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public int getCountPhone() {
+        return countPhone;
+    }
+
+    public void setCountPhone(int countPhone) {
+        this.countPhone = countPhone;
+    }
+
+    public int getCountSkype() {
+        return countSkype;
+    }
+
+    public void setCountSkype(int countSkype) {
+        this.countSkype = countSkype;
+    }
+
+    public int getCountFavorite() {
+        return countFavorite;
+    }
+
+    public void setCountFavorite(int countFavorite) {
+        this.countFavorite = countFavorite;
+    }
 }

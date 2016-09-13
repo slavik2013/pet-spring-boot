@@ -295,15 +295,15 @@ public class MainController {
         return categoryRepository.findAll();
     }
 
-    @RequestMapping(value = "/categorywrapper", method = RequestMethod.GET, produces = "application/xml")
-    public CategoriesWrapper getCategoryWrapper(){
-        System.out.println("getCategoryWrapper()");
-
-        List<Category> categories = categoryRepository.findByLevel(Category.TOP_LEVEL);
-        CategoriesWrapper categoriesWrapper = new CategoriesWrapper();
-        categoriesWrapper.setList(categories);
-        return categoriesWrapper;
-    }
+//    @RequestMapping(value = "/categorywrapper", method = RequestMethod.GET, produces = "application/xml")
+//    public CategoriesWrapper getCategoryWrapper(){
+//        System.out.println("getCategoryWrapper()");
+//
+//        List<Category> categories = categoryRepository.findByLevel(Category.TOP_LEVEL);
+//        CategoriesWrapper categoriesWrapper = new CategoriesWrapper();
+//        categoriesWrapper.setList(categories);
+//        return categoriesWrapper;
+//    }
 
     @RequestMapping(value = "/topcategory", method = RequestMethod.GET, produces = "application/json")
     public List<Category> getCategoriesByTopLevel(){
